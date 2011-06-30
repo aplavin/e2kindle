@@ -1,0 +1,41 @@
+﻿<Window x:Class="e2Kindle.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Settings"
+        Height="284" Width="299"
+        ResizeMode="NoResize"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing">
+    <Grid>
+        <Image Source="Resources/google.png" Stretch="None" Height="32" Width="32" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="12,23,0,0" />
+        <Label Content="Username" HorizontalAlignment="Left" Margin="51,10,0,0" VerticalAlignment="Top" />
+        <Label Content="Password" HorizontalAlignment="Left" Margin="51,42,0,0" VerticalAlignment="Top" />
+        <TextBox HorizontalAlignment="Left" Margin="141,12,0,0" Name="tbUsername" VerticalAlignment="Top" Width="120" />
+        <TextBox HorizontalAlignment="Left" Margin="141,44,0,0" Name="tbPassword" VerticalAlignment="Top" Width="120" />
+        <CheckBox Content="Mark sent feeds as read" HorizontalAlignment="Left" Margin="51,74,0,0" Name="cbMarkAsRead" VerticalAlignment="Top" />
+
+        <Separator Height="5" HorizontalAlignment="Left" Margin="12,96,0,0" VerticalAlignment="Top" Width="253" />
+
+        <Image Source="Resources/amazon.png" Stretch="None" Height="32" Width="32" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="12,109,0,0" />
+        <Label Content="Kindle e-mail" HorizontalAlignment="Left" Margin="51,107,0,0" VerticalAlignment="Top" />
+        <TextBox HorizontalAlignment="Left" Margin="141,109,0,0" Name="tbKindleEmail" VerticalAlignment="Top" Width="120" />
+
+        <Separator Height="5" HorizontalAlignment="Left" Margin="12,147,0,0" VerticalAlignment="Top" Width="253" />
+        
+        <CheckBox Content="Load full articles (where possible)" Height="16" HorizontalAlignment="Left" Margin="51,158,0,0" Name="cbLoadFull" VerticalAlignment="Top" />
+
+        <Button Click="OkClick" HorizontalAlignment="Left" Margin="99,0,0,11" Width="72" Height="37" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="Resources/accept.png" Width="32" Height="32" Margin="0,0,10,0"/>
+                <TextBlock VerticalAlignment="Center">OK</TextBlock>
+            </StackPanel>
+        </Button>
+
+        <Button Click="CancelClick" HorizontalAlignment="Left" Margin="177,0,0,12" Width="84" Height="37" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="Resources/cancel.png" Width="32" Height="32" Margin="0,0,10,0"/>
+                <TextBlock VerticalAlignment="Center">Cancel</TextBlock>
+            </StackPanel>
+        </Button>
+    </Grid>
+</Window>
