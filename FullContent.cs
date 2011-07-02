@@ -13,20 +13,25 @@ namespace e2Kindle
             new Regex(@"^(https?://)?(www\.)?(m\.)?(habra)?habr.ru/((blogs/\w+)|(linker/go)|(company/\w+/blog)|(post))/(?<Num>\d+)/?$",
                 RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private const bool INCLUDE_COMMENTS = true;
+        // TODO
+        private const bool INCLUDE_COMMENTS = false;
 
         protected override bool IsMyUrl(string url)
         {
+            if (url == null) throw new ArgumentNullException("url");
             return urlRegex.IsMatch(url);
         }
 
         protected override string ProcessUrl(string url)
         {
+            if (url == null) throw new ArgumentNullException("url");
             return urlRegex.Replace(url, "http://m.habr.ru/post/${Num}/");
         }
 
         protected override string ProcessContent(string content)
         {
+            if (content == null) throw new ArgumentNullException("content");
+
             var chunks = ContentProcess.ParseHTML(content);
             var articleChunks = chunks.
                  SkipUntil(c =>
@@ -74,18 +79,21 @@ namespace e2Kindle
 
         public static bool Exists(string url)
         {
+            if (url == null) throw new ArgumentNullException("url");
             return Instances.Count(i => i.IsMyUrl(url)) == 1;
         }
 
         public static string Get(string url)
         {
+            if (url == null) throw new ArgumentNullException("url");
+
             FullContent instance = Instances.Single(i => i.IsMyUrl(url));
 
             url = instance.ProcessUrl(url);
             string data;
             try
             {
-                data = Utils.GetString(url);
+                data = Utils.Download(url);
             }
             catch
             {
@@ -95,13 +103,9 @@ namespace e2Kindle
             return data;
         }
 
-        private static readonly List<FullContent> Instances;
-
-        static FullContent()
-        {
-            Instances = new List<FullContent>{
+        private static readonly List<FullContent> Instances = 
+            new List<FullContent>{
                 new HabrContent(),
             };
-        }
     }
 }

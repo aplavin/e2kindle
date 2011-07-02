@@ -71,7 +71,6 @@ namespace e2Kindle
             return source.SkipWhile((t, i) => !predicate(t, i));
         }
 
-
         /// <summary>
         /// Returns elements from a sequence until a specified condition is true.
         /// </summary>
@@ -95,6 +94,31 @@ namespace e2Kindle
         public static IEnumerable<T> TakeUntil<T>(this IEnumerable<T> source, Func<T, int, bool> predicate)
         {
             return source.TakeWhile((t, i) => !predicate(t, i));
+        }
+
+        /// <summary>
+        /// Filters a sequence of values based on a predicate.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> WhereNot<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+        {
+            return source.Where(t => !predicate(t));
+        }
+
+        /// <summary>
+        /// Filters a sequence of values based on a predicate.
+        /// The element's index is used in the logic of the predicate function.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> WhereNot<T>(this IEnumerable<T> source, Func<T, int, bool> predicate)
+        {
+            return source.Where((t, i) => !predicate(t, i));
         }
     }
 }

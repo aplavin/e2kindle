@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
@@ -19,9 +20,6 @@ namespace e2Kindle
     {
         static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        /// <summary>
-        /// Use multithread processing of feed items or not.
-        /// </summary>
         const bool MultiThreading = false;
         /// <summary>
         /// Images which have any string from this array in URL will not be downloaded.
@@ -37,15 +35,17 @@ namespace e2Kindle
         /// </summary>
         /// <param name="htmlContent">HTML code. Image URL must be absolute (start with http:// or smth like this)</param>
         /// <returns>Base64 encoded images as pairs: first is image name, second is base64 encoded image itself.</returns>
-        static IEnumerable<KeyValuePair<string, string>> ProcessHtmlImages(ref string htmlContent)
+        static IEnumerable<KeyValuePair<string, byte[]>> ProcessHtmlImages(ref string htmlContent)
         {
+            if (htmlContent == null) throw new ArgumentNullException("htmlContent");
+
             // this regex matches all img src attributes. Yes, it's not good-looking =)
             var matches = Regex.Matches(htmlContent, @"(?<=img+.+src\=[\x27\x22])(?<Url>[^\x27\x22]*)(?=[\x27\x22])");
             var positions = (from Match match in matches
                              where !BadImageStrings.Any(bad => match.Value.Contains(bad))
                              select Utils.MakePair(match.Index, match.Length));
 
-            var images = new List<KeyValuePair<string, string>>();
+            var images = new List<KeyValuePair<string, byte[]>>();
             if (positions.Empty()) return images;
 
             // start from the end 
@@ -55,16 +55,23 @@ namespace e2Kindle
                 string url = htmlContent.Substring(position.First, position.Second);
 
                 // download the image
-                byte[] image = Utils.RecodeImage(url);
-                // if null (couldn't download) then skip this image
-                if (image == null) continue;
-                string imageBase64 = Convert.ToBase64String(image);
+                byte[] image;
+                try
+                {
+                    image = Utils.RecodeImage(url);
+                }
+                catch (Exception ex)
+                {
+                    // couldn't recode image - log this and skip
+                    logger.WarnException(string.Format("Can't load or convert image from '{0}'.", url), ex);
+                    continue;
+                }
 
                 // create unique name for image
                 string imageName = String.Format("{0}.jpg", Interlocked.Increment(ref _uniqueImgNum));
 
                 // add image to the output dictionary
-                images.Add(new KeyValuePair<string, string>(imageName, imageBase64));
+                images.Add(new KeyValuePair<string, byte[]>(imageName, image));
 
                 // and change image name in the html code
                 htmlContent = htmlContent.
@@ -75,28 +82,6 @@ namespace e2Kindle
             return images;
         }
 
-        static readonly string[] HTMLEntities = { "&quot;", "&amp;", "&amp;", "&lt;", "&gt;", "&nbsp;", "&iexcl;", "&cent;", "&pound;", "&curren;", "&yen;", "&brvbar;", "&sect;", "&uml;", "&copy;", "&ordf;", "&laquo;", "&not;", "&shy;", "&reg;", "&macr;", "&deg;", "&plusmn;", "&sup2;", "&sup3;", "&acute;", "&micro;", "&para;", "&middot;", "&cedil;", "&sup1;", "&ordm;", "&raquo;", "&frac14;", "&frac12;", "&frac34;", "&iquest;", "&Agrave;", "&Aacute;", "&Acirc;", "&Atilde;", "&Auml;", "&Aring;", "&AElig;", "&Ccedil;", "&Egrave;", "&Eacute;", "&Ecirc;", "&Euml;", "&Igrave;", "&Iacute;", "&Icirc;", "&Iuml;", "&ETH;", "&Ntilde;", "&Ograve;", "&Oacute;", "&Ocirc;", "&Otilde;", "&Ouml;", "&times;", "&Oslash;", "&Ugrave;", "&Uacute;", "&Ucirc;", "&Uuml;", "&Yacute;", "&THORN;", "&szlig;", "&agrave;", "&aacute;", "&acirc;", "&atilde;", "&auml;", "&aring;", "&aelig;", "&ccedil;", "&egrave;", "&eacute;", "&ecirc;", "&euml;", "&igrave;", "&iacute;", "&icirc;", "&iuml;", "&eth;", "&ntilde;", "&ograve;", "&oacute;", "&ocirc;", "&otilde;", "&ouml;", "&divide;", "&oslash;", "&ugrave;", "&uacute;", "&ucirc;", "&uuml;", "&yacute;", "&thorn;", "&yuml;" };
-        static readonly string[] XMLEntities = { "&#34;", "&#38;", "&#38;", "&#60;", "&#62;", "&#160;", "&#161;", "&#162;", "&#163;", "&#164;", "&#165;", "&#166;", "&#167;", "&#168;", "&#169;", "&#170;", "&#171;", "&#172;", "&#173;", "&#174;", "&#175;", "&#176;", "&#177;", "&#178;", "&#179;", "&#180;", "&#181;", "&#182;", "&#183;", "&#184;", "&#185;", "&#186;", "&#187;", "&#188;", "&#189;", "&#190;", "&#191;", "&#192;", "&#193;", "&#194;", "&#195;", "&#196;", "&#197;", "&#198;", "&#199;", "&#200;", "&#201;", "&#202;", "&#203;", "&#204;", "&#205;", "&#206;", "&#207;", "&#208;", "&#209;", "&#210;", "&#211;", "&#212;", "&#213;", "&#214;", "&#215;", "&#216;", "&#217;", "&#218;", "&#219;", "&#220;", "&#221;", "&#222;", "&#223;", "&#224;", "&#225;", "&#226;", "&#227;", "&#228;", "&#229;", "&#230;", "&#231;", "&#232;", "&#233;", "&#234;", "&#235;", "&#236;", "&#237;", "&#238;", "&#239;", "&#240;", "&#241;", "&#242;", "&#243;", "&#244;", "&#245;", "&#246;", "&#247;", "&#248;", "&#249;", "&#250;", "&#251;", "&#252;", "&#253;", "&#254;", "&#255;" };
-
-        /// <summary>
-        /// Converts HTML entities in content to XML ones.
-        /// </summary>
-        /// <param name="content">HTML code</param>
-        /// <returns>The same code, but with converted entities</returns>
-        static string EntitiesHtmlToXml(string content)
-        {
-            if (HTMLEntities.Length != XMLEntities.Length || HTMLEntities.Contains(null) || XMLEntities.Contains(null))
-            {
-                throw new InvalidDataException("Arrays of HTML and XML entities are wrong.");
-            }
-
-            for (int i = 0; i < HTMLEntities.Length; i++)
-            {
-                content = content.Replace(HTMLEntities[i], XMLEntities[i]);
-            }
-            return content;
-        }
-
         /// <summary>
         /// Parses the HTML code into htmlchunks.
         /// </summary>
@@ -104,29 +89,24 @@ namespace e2Kindle
         /// <returns></returns>
         public static List<HTMLchunk> ParseHTML(string htmlCode)
         {
-            try
-            {
-                var chunks = new List<HTMLchunk>();
-                using (var parser = new HTMLparser(htmlCode) { bDecodeEntities = true })
-                {
-                    while (true)
-                    {
-                        using (var chunk = parser.ParseNext())
-                        {
-                            // end of html reached
-                            if (chunk == null) break;
+            if (htmlCode == null) throw new ArgumentNullException("htmlCode");
 
-                            chunks.Add(chunk.Clone());
-                        }
+            var chunks = new List<HTMLchunk>();
+            // Note: couldn't find if any exception is thrown during HTML parsing
+            using (var parser = new HTMLparser(htmlCode) { bDecodeEntities = true })
+            {
+                while (true)
+                {
+                    using (var chunk = parser.ParseNext())
+                    {
+                        // end of html reached
+                        if (chunk == null) break;
+
+                        chunks.Add(chunk.Clone());
                     }
                 }
-                return chunks;
             }
-            catch (Exception ex)
-            {
-                logger.Error("Can't parse HTML code.", ex);
-                return null;
-            }
+            return chunks;
         }
 
         /// <summary>
@@ -136,7 +116,9 @@ namespace e2Kindle
         /// <returns></returns>
         static string CombineToFb2(IEnumerable<HTMLchunk> chunks)
         {
-            string result = string.Empty;
+            if (chunks == null) throw new ArgumentNullException("chunks");
+
+            var result = new StringBuilder();
 
             foreach (var chunk in chunks)
             {
@@ -144,10 +126,10 @@ namespace e2Kindle
                 {
                     case HTMLchunkType.Text:
                         string text = WebUtility.HtmlEncode(chunk.oHTML);
-                        result += text;
+                        result.Append(text);
                         // space is added due to a bug(?) in calibri with empty text between tags
                         if (!text.Contains(' '))
-                            result += ' ';
+                            result.Append(' ');
                         break;
                     case HTMLchunkType.OpenTag:
                     case HTMLchunkType.CloseTag:
@@ -158,13 +140,13 @@ namespace e2Kindle
                         {
                             case "img":
                                 // img tags are already processed, so they always have src param and it's correct
-                                result += string.Format(@"<image l:href=""#{0}""/>", chunk.oParams["src"]);
+                                result.AppendFormat(@"<image l:href=""#{0}""/>", chunk.oParams["src"]);
                                 break;
                             case "hr":
-                                result += "<subtitle>* * *</subtitle>";
+                                result.Append("<subtitle>* * *</subtitle>");
                                 break;
                             case "br":
-                                result += "<empty-line/>";
+                                result.Append("<empty-line/>");
                                 break;
                         }
 
@@ -174,15 +156,15 @@ namespace e2Kindle
                             {
                                 case "strike":
                                 case "s":
-                                    result += string.Format("<{0}strikethrough>", slashIfClose);
+                                    result.AppendFormat("<{0}strikethrough>", slashIfClose);
                                     break;
                                 case "u":
-                                    // TODO: try to make correct formatting
-                                    result += string.Format("<{0}emphasis>", slashIfClose);
+                                    // TODO: try to make correct formatting (underlined)
+                                    result.AppendFormat("<{0}emphasis>", slashIfClose);
                                     break;
                                 case "b":
                                 case "strong":
-                                    result += string.Format("<{0}strong>", slashIfClose);
+                                    result.AppendFormat("<{0}strong>", slashIfClose);
                                     break;
                                 case "h1":
                                 case "h2":
@@ -190,16 +172,16 @@ namespace e2Kindle
                                 case "h4":
                                 case "h5":
                                 case "h6":
-                                    result += string.Format("<{0}subtitle>", slashIfClose);
+                                    result.AppendFormat("<{0}subtitle>", slashIfClose);
                                     break;
                                 case "i":
                                 case "em":
-                                    result += string.Format("<{0}emphasis>", slashIfClose);
+                                    result.AppendFormat("<{0}emphasis>", slashIfClose);
                                     break;
                                 case "code":
                                 case "pre":
                                 case "tt":
-                                    result += string.Format("<{0}code>", slashIfClose);
+                                    result.AppendFormat("<{0}code>", slashIfClose);
                                     break;
                                 // now go tags which name and functionality is the same in HTML and FB2
                                 case "sup":
@@ -211,35 +193,39 @@ namespace e2Kindle
                                 case "th":
                                 case "td":
                                     // append just tag, without its parameters
-                                    result += string.Format("<{1}{0}>", chunk.sTag, slashIfClose);
+                                    result.AppendFormat("<{1}{0}>", chunk.sTag, slashIfClose);
                                     break;
                             }
                         break;
                 }
             }
 
-            return result;
+            return result.ToString();
         }
 
         public static string CombineToHtml(this IEnumerable<HTMLchunk> chunks)
         {
-            string res = "";
+            if (chunks == null) throw new ArgumentNullException("chunks");
+
+            var result = new StringBuilder();
+
             foreach (var chunk in chunks)
             {
                 switch (chunk.oType)
                 {
                     case HTMLchunkType.Text:
-                        res += WebUtility.HtmlEncode(chunk.oHTML);
+                        result.Append(WebUtility.HtmlEncode(chunk.oHTML));
                         break;
                     case HTMLchunkType.OpenTag:
-                        res += chunk.GenerateHTML();
+                        result.Append(chunk.GenerateHTML());
                         break;
                     case HTMLchunkType.CloseTag:
-                        res += chunk.GenerateHTML();
+                        result.Append(chunk.GenerateHTML());
                         break;
                 }
             }
-            return res;
+
+            return result.ToString();
         }
 
         /// <summary>
@@ -247,18 +233,15 @@ namespace e2Kindle
         /// </summary>
         /// <param name="content">Before: HTML code to be converted. After: converted FB2 code.</param>
         /// <param name="binaries">List of binary sections in the FB2 document. This function appends to it.</param>
-        static void HtmlToFb2(ref string content, ref List<string> binaries)
+        static void HtmlToFb2(ref string content, ref List<KeyValuePair<string, byte[]>> binaries)
         {
+            if (content == null) throw new ArgumentNullException("content");
+            if (binaries == null) throw new ArgumentNullException("binaries");
+
             // process images in html
             var images = ProcessHtmlImages(ref content);
-
-            // and add them to binaries list as fb2 <binary> tags
-            binaries.AddRange(
-                images.Select(
-                    p => @"<binary id=""{name}"" content-type=""image/jpeg"">{base64}</binary>".
-                        Format(new { name = p.Key, base64 = p.Value })
-                )
-            );
+            // and add them to binaries list
+            binaries.AddRange(images);
 
             List<HTMLchunk> htmlChunks = ParseHTML(content) ?? new List<HTMLchunk>();
 
@@ -312,20 +295,25 @@ namespace e2Kindle
         /// Creates FB2 document of all the FeedItems and writes it to the writer.
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="feedItems"></param>
+        /// <param name="feedEntries"></param>
         public static void CreateFb2(TextWriter writer, IEnumerable<IGrouping<GoogleFeed, GoogleFeedEntry>> feedEntries)
         {
+            if (writer == null) throw new ArgumentNullException("writer");
+            if (feedEntries == null) throw new ArgumentNullException("feedEntries");
+
             logger.Info("Processing {0} feeds entries", feedEntries.Sum(gr => gr.Count()));
 
-            var binaries = new List<string>();
+            var binaries = new List<KeyValuePair<string, byte[]>>();
+
             feedEntries.AsParallel().
-                ForAll(gr => gr.AsParallel().
-                    ForAll(e =>
+                ForAll(gr => gr.//AsParallel().
+                    ForEach(e =>
                                {
                                    if (Settings.Default.LoadFullContent && FullContent.Exists(e.Link))
                                        e.Content = FullContent.Get(e.Link) ?? (e.Content + "<hr/>[Полное содержание не может быть загружено]");
                                    HtmlToFb2(ref e.Content, ref binaries);
                                }));
+
             feedEntries = feedEntries.OrderBy(gr => gr.Key.Title);
 
             logger.Info("Creating XML structure of the FB2 (intermediate format)");
@@ -382,9 +370,12 @@ namespace e2Kindle
                 #endregion
 
                 #region binaries
-                foreach (string binary in binaries)
+                foreach (var binary in binaries)
                 {
-                    xw.WriteRaw(binary);
+                    xw.WriteStartElement("binary");
+                    xw.WriteAttributeString("id", binary.Key);
+                    xw.WriteAttributeString("content-type", "image/jpeg");
+                    xw.WriteBase64(binary.Value, 0, binary.Value.Length);
                 }
 
                 string coverBinary = @"<binary id=""cover.png"" content-type=""image/png"">"

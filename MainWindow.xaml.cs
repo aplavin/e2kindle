@@ -5,7 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 using e2Kindle.Properties;
 using NLog;
 
@@ -38,19 +40,26 @@ namespace e2Kindle
                 SetWait(true);
                 logger.Info("Getting feed entries ({0} feeds)", feeds.Count);
 
-                var entries = GoogleReader.GetEntries(feeds);
-                using (var writer = new StreamWriter("out.fb2"))
+                try
                 {
-                    ContentProcess.CreateFb2(writer, entries);
+                    var entries = GoogleReader.GetEntries(feeds);
+                    using (var writer = new StreamWriter("out.fb2"))
+                    {
+                        ContentProcess.CreateFb2(writer, entries);
+                    }
+
+                    logger.Info("Feeds are downloaded and saved");
+                    //logger.Info("Sending feeds...");
+
+                    if (Settings.Default.MarkAsRead)
+                    {
+                        GoogleReader.MarkAsRead(entries.SelectMany(gr => gr));
+                        logger.Info("Marked all entries as read");
+                    }
                 }
-
-                logger.Info("Feeds are downloaded and saved");
-                //logger.Info("Sending feeds...");
-
-                if (Settings.Default.MarkAsRead)
+                catch (GoogleReaderException ex)
                 {
-                    GoogleReader.MarkAsRead(entries.SelectMany(gr => gr));
-                    logger.Info("Marked all entries as read");
+                    logger.ErrorException(ex.Message, ex);
                 }
 
                 SetWait(false);
@@ -73,19 +82,28 @@ namespace e2Kindle
                 SetWait(true);
                 logger.Info("Loading feeds from Google Reader");
 
-                var feeds = GoogleReader.GetFeeds().OrderByDescending(gf => gf.UnreadCount);
-                Dispatcher.Invoke(new Action(() => Feeds.AddRange((feeds))), null);
-                Dispatcher.Invoke(new Action(() =>
+                try
                 {
-                    listView.SelectedItems.Clear();
-                    Feeds.Where(f => f.UnreadCount > 0).ForEach(f => listView.SelectedItems.Add(f));
-                }
-                ), null);
+                    var feeds = GoogleReader.GetFeeds().OrderByDescending(gf => gf.UnreadCount);
+                    Dispatcher.Invoke(new Action(() => Feeds.AddRange((feeds))), null);
+                    Dispatcher.Invoke(new Action(() =>
+                    {
+                        listView.SelectedItems.Clear();
+                        Feeds.Where(f => f.UnreadCount > 0).ForEach(
+                            f => listView.SelectedItems.Add(f));
+                    }
+                                          ), null);
 
-                logger.Info("Loaded {0} feeds ({2} unread entries in {1} feeds)",
-                    feeds.Count(),
-                    feeds.Count(f => f.UnreadCount > 0),
-                    feeds.Sum(f => f.UnreadCount));
+                    logger.Info("Loaded {0} feeds ({2} unread entries in {1} feeds)",
+                                feeds.Count(),
+                                feeds.Count(f => f.UnreadCount > 0),
+                                feeds.Sum(f => f.UnreadCount));
+                }
+                catch (GoogleReaderException ex)
+                {
+                    logger.ErrorException(ex.Message, ex);
+                }
+
                 SetWait(false);
             }).Start();
         }
@@ -107,16 +125,18 @@ namespace e2Kindle
                 null);
         }
 
-        public static void Log(string message)
+        public static void Log(string message, Brush brush)
         {
             if (_instance != null && _instance.richTextBox != null)
             {
                 _instance.richTextBox.Dispatcher.Invoke(
-                    new Action(() => _instance.richTextBox.AppendText(message + '\r')),
-                    null);
-
-                _instance.richTextBox.Dispatcher.Invoke(
-                    new Action(() => _instance.richTextBox.ScrollToEnd()),
+                    new Action(() =>
+                                   {
+                                       TextRange tr = new TextRange(_instance.richTextBox.Document.ContentEnd, _instance.richTextBox.Document.ContentEnd);
+                                       tr.Text = message + '\r';
+                                       tr.ApplyPropertyValue(TextElement.ForegroundProperty, brush);
+                                       _instance.richTextBox.ScrollToEnd();
+                                   }),
                     null);
             }
         }

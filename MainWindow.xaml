@@ -5,7 +5,8 @@
         Title="MainWindow" Icon="Resources/Icon.ico"
         Loaded="Window_Loaded"
         Closing="Window_Closing"
-        Height="481" Width="399">
+        Height="548" Width="697"
+        MinHeight="350" MinWidth="230">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -33,7 +34,7 @@
             </ListView.View>
         </ListView>
 
-        <ToolBar Margin="12,12,226,0" VerticalAlignment="Top">
+        <ToolBar Margin="12,12,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
             <Button Click="LoadFeedsClick" ToolTip="Load unread from Google Reader.">
                 <Image Source="Resources/google_go.png" Stretch="None" />
             </Button>
@@ -45,8 +46,6 @@
             </Button>
         </ToolBar>
 
-        <RichTextBox Height="100" HorizontalAlignment="Stretch" Margin="12,0,12,12" Name="richTextBox" VerticalAlignment="Bottom" Grid.Row="1" IsReadOnly="True" VerticalScrollBarVisibility="Auto" />
-        
-        
+        <RichTextBox Grid.Row="1" Height="150" HorizontalAlignment="Stretch" Margin="12,0,12,12" Name="richTextBox" VerticalAlignment="Bottom" IsReadOnly="True" VerticalScrollBarVisibility="Auto" FontWeight="Bold" />
     </Grid>
 </Window>

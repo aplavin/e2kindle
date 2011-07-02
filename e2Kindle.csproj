@@ -17,9 +17,9 @@
     <WarningLevel>4</WarningLevel>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
-    <Install>false</Install>
+    <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateEnabled>false</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
@@ -27,10 +27,10 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <TargetCulture>en</TargetCulture>
-    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>1</ApplicationRevision>
+    <AutorunEnabled>true</AutorunEnabled>
+    <ApplicationRevision>4</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -71,7 +71,7 @@
     <ManifestKeyFile>e2Kindle_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>false</GenerateManifests>
+    <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -95,9 +95,6 @@
     <OutputPath>bin\x64\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FreeImageNET">
-      <HintPath>dlls\FreeImageNET.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json.Net35, Version=4.0.2.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dlls\Newtonsoft.Json.Net35.dll</HintPath>
@@ -128,6 +125,7 @@
     <Compile Include="CollectionUtils.cs" />
     <Compile Include="FullContent.cs" />
     <Compile Include="GoogleReader.cs" />
+    <Compile Include="ImageUtils.cs" />
     <Compile Include="NLogTarget.cs" />
     <Compile Include="Pair.cs" />
     <Compile Include="Settings.cs" />
@@ -214,11 +212,6 @@
     <Resource Include="Resources\feed_key.png" />
     <Resource Include="Resources\feed_magnify.png" />
     <Resource Include="Resources\google.png" />
-    <None Include="FreeImage.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="dlls\FreeImageNET.dll" />
-    <None Include="dlls\FreeImageNET.XML" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\amazon.png" />
