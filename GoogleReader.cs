@@ -63,7 +63,8 @@ namespace e2Kindle
         }
     }
 
-    public struct GoogleFeedEntry : IEquatable<GoogleFeedEntry>
+    // Note: it should be a struct...
+    public class GoogleFeedEntry : IEquatable<GoogleFeedEntry>
     {
         public string Id;
         public string Link;

@@ -306,8 +306,8 @@ namespace e2Kindle
             var binaries = new List<KeyValuePair<string, byte[]>>();
 
             feedEntries.AsParallel().
-                ForAll(gr => gr.//AsParallel().
-                    ForEach(e =>
+                ForAll(gr => gr.AsParallel().
+                    ForAll(e =>
                                {
                                    if (Settings.Default.LoadFullContent && FullContent.Exists(e.Link))
                                        e.Content = FullContent.Get(e.Link) ?? (e.Content + "<hr/>[Полное содержание не может быть загружено]");
