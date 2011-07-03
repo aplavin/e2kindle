@@ -143,14 +143,9 @@ namespace e2Kindle
                          Select(v => new GoogleFeedEntry
                          {
                              Id = v["id"].Value<string>(),
-                             Link = v["alternate"].First["href"].Value<string>(),
-                             Title = v["title"] != null ?
-                             v["title"].Value<string>() :
-                             "[без названия]",
-                             Content =
-                             v["summary"] != null && v["summary"]["content"] != null ?
-                             v["summary"]["content"].Value<string>() :
-                             "[пусто]",
+                             Link = Utils.CatchNullReference(() => v["alternate"].First["href"].Value<string>(), null),
+                             Title = Utils.CatchNullReference(() => v["title"].Value<string>(), "[No title]"),
+                             Content = Utils.CatchNullReference(() => v["summary"]["content"].Value<string>(), null),
                              Published = new DateTime(1970, 1, 1) + TimeSpan.FromSeconds(v["published"].Value<long>()),
                              Feed = feed
                          });
@@ -286,7 +281,7 @@ namespace e2Kindle
 
                 byte[] requestContent = Encoding.UTF8.GetBytes(
                     "service={service}&Email={user}&Passwd={pass}&continue=http://www.google.com/".
-                        Format(new { service = "reader", user = Settings.Default.Username, pass = Settings.Default.Password })
+                        Format(new { service = "reader", user = Settings.Default.GoogleUser, pass = Settings.Default.GooglePassword })
                     );
 
                 loginRequest.Method = "POST";

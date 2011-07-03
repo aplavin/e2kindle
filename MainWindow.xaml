@@ -35,14 +35,14 @@
         </ListView>
 
         <ToolBar Margin="12,12,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <Button Click="LoadFeedsClick" ToolTip="Load unread from Google Reader.">
+            <Button Click="LoadFeedsClick" ToolTip="Load feeds from Google Reader.">
                 <Image Source="Resources/google_go.png" Stretch="None" />
             </Button>
             <Button Click="SettingsClick">
                 <Image Source="Resources/settings.png" Stretch="None" />
             </Button>
-            <Button Click="SendClick" ToolTip="Send unread items in selected feeds to Kindle.">
-                <Image Source="Resources/email_go.png" Stretch="None" />
+            <Button Click="SendClick" ToolTip="Process unread items in selected feeds: send them to Kindle or just save.">
+                <Image Source="Resources/newspaper_go.png" Stretch="None" />
             </Button>
         </ToolBar>
 

@@ -66,6 +66,18 @@ namespace e2Kindle
             }
         }
 
+        public static T CatchNullReference<T>(Func<T> function, T defaultValue)
+        {
+            try
+            {
+                return function();
+            }
+            catch (NullReferenceException)
+            {
+                return defaultValue;
+            }
+        }
+
         /// <summary>
         /// Precompiled regex to use by Format function.
         /// </summary>
@@ -115,7 +127,7 @@ namespace e2Kindle
                 var prop = type.GetProperty(fieldName);
                 if (prop == null)
                 {
-                    throw new ArgumentException("Object arg hasn't public field/property which is specified in the format string.", "arg");
+                    throw new ArgumentNullException("arg", "Object arg hasn't public field/property which is specified in the format string.");
                 }
                 object value = prop.GetValue(arg, null);
 

@@ -33,6 +33,7 @@ namespace e2Kindle
             if (content == null) throw new ArgumentNullException("content");
 
             var chunks = ContentProcess.ParseHTML(content);
+
             var articleChunks = chunks.
                  SkipUntil(c =>
                      c.oType == HTMLchunkType.OpenTag && c.sTag == "div" && c.oParams.ContainsKey("class") && c.oParams["class"] == "txt").

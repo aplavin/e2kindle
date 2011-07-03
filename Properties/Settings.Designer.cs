@@ -26,30 +26,30 @@ namespace e2Kindle.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Username {
+        public string GoogleUser {
             get {
-                return ((string)(this["Username"]));
+                return ((string)(this["GoogleUser"]));
             }
             set {
-                this["Username"] = value;
+                this["GoogleUser"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Password {
+        public string GooglePassword {
             get {
-                return ((string)(this["Password"]));
+                return ((string)(this["GooglePassword"]));
             }
             set {
-                this["Password"] = value;
+                this["GooglePassword"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("@kindle.com")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string KindleEmail {
             get {
                 return ((string)(this["KindleEmail"]));
@@ -80,6 +80,30 @@ namespace e2Kindle.Properties {
             }
             set {
                 this["LoadFullContent"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0, 0, 0")]
+        public global::System.Drawing.Rectangle WindowRectangle {
+            get {
+                return ((global::System.Drawing.Rectangle)(this["WindowRectangle"]));
+            }
+            set {
+                this["WindowRectangle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("mobi")]
+        public string NeededFormats {
+            get {
+                return ((string)(this["NeededFormats"]));
+            }
+            set {
+                this["NeededFormats"] = value;
             }
         }
     }

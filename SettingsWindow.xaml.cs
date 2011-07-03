@@ -29,8 +29,8 @@ namespace e2Kindle
         {
             Hide();
 
-            Settings.Default.Username = tbUsername.Text;
-            Settings.Default.Password = tbPassword.Text;
+            Settings.Default.GoogleUser = tbUsername.Text;
+            Settings.Default.GooglePassword = tbPassword.Text;
             Settings.Default.MarkAsRead = (bool)cbMarkAsRead.IsChecked;
             Settings.Default.KindleEmail = tbKindleEmail.Text;
             Settings.Default.LoadFullContent = (bool)cbLoadFull.IsChecked;
@@ -40,8 +40,8 @@ namespace e2Kindle
 
         private void Window_Loaded(object sender, EventArgs e)
         {
-            tbUsername.Text = Settings.Default.Username;
-            tbPassword.Text = Settings.Default.Password;
+            tbUsername.Text = Settings.Default.GoogleUser;
+            tbPassword.Text = Settings.Default.GooglePassword;
             cbMarkAsRead.IsChecked = Settings.Default.MarkAsRead;
             tbKindleEmail.Text = Settings.Default.KindleEmail;
             cbLoadFull.IsChecked = Settings.Default.LoadFullContent;

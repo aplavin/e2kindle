@@ -20,7 +20,6 @@ namespace e2Kindle
     {
         static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        const bool MultiThreading = false;
         /// <summary>
         /// Images which have any string from this array in URL will not be downloaded.
         /// </summary>
@@ -29,6 +28,43 @@ namespace e2Kindle
         /// Helper variable to ensure that all images in the resulting FB2 file will have unique names.
         /// </summary>
         static int _uniqueImgNum = 0;
+
+        private static void CalibreConvert(string inputFile, string outputFormat)
+        {
+            if (inputFile == null) throw new ArgumentNullException("inputFile");
+            if (outputFormat == null) throw new ArgumentNullException("outputFormat");
+
+            string outputFile = Path.ChangeExtension(inputFile, outputFormat.ToLower());
+            if (inputFile == outputFile) return;
+
+            if (!File.Exists(inputFile)) throw new ArgumentException("Input file doesn't exist.", "inputFile");
+            if (File.Exists(outputFile)) File.Delete(outputFile);
+
+            try
+            {
+                using (var process = Process.Start("ebook-convert", string.Format(@" ""{0}"" ""{1}""", inputFile, outputFile)))
+                {
+                    process.WaitForExit();
+                    if (process.ExitCode != 0)
+                    {
+                        throw new FileFormatException(
+                            string.Format("Format of input (*{0}) or output (*{1}) file isn't supported by Calibre.",
+                            Path.GetExtension(inputFile),
+                            Path.GetExtension(outputFile)));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("Can't convert '{0}' to '{1}'.", inputFile, outputFile), ex);
+            }
+        }
+
+        public static void CalibreConvert(string inputFile, IEnumerable<string> outputFormats)
+        {
+            outputFormats.AsParallel().
+                ForAll(f => CalibreConvert(inputFile, f));
+        }
 
         /// <summary>
         /// Downloads all images from this HTML document (excluding ones those contain any string from BadImageStrings), converts all to base64 and make their names unique. JPG format is used.
@@ -128,8 +164,8 @@ namespace e2Kindle
                         string text = WebUtility.HtmlEncode(chunk.oHTML);
                         result.Append(text);
                         // space is added due to a bug(?) in calibri with empty text between tags
-                        if (!text.Contains(' '))
-                            result.Append(' ');
+                        //if (!text.Contains(' '))
+                        //    result.Append(' ');
                         break;
                     case HTMLchunkType.OpenTag:
                     case HTMLchunkType.CloseTag:
@@ -148,6 +184,10 @@ namespace e2Kindle
                             case "br":
                                 result.Append("<empty-line/>");
                                 break;
+                            case "li":
+                            case "dt":
+                            case "dd":
+                                goto case "br";
                         }
 
                         // now process tags that are not inserted when endClosure (e.g. <p/>, it can exist on badly formed pages)
@@ -310,7 +350,7 @@ namespace e2Kindle
                     ForAll(e =>
                                {
                                    if (Settings.Default.LoadFullContent && FullContent.Exists(e.Link))
-                                       e.Content = FullContent.Get(e.Link) ?? (e.Content + "<hr/>[Полное содержание не может быть загружено]");
+                                       e.Content = FullContent.Get(e.Link) ?? (e.Content + string.Format("<hr/>[Full article content couldn't be downloaded, although url <u>{0}</u> is supported]", e.Link));
                                    HtmlToFb2(ref e.Content, ref binaries);
                                }));
 
@@ -328,16 +368,16 @@ namespace e2Kindle
 
                 xw.WriteStartElement("title-info");
                 xw.WriteElementString("genre", "comp_www");
-                xw.WriteRaw(@"<author><first-name>" + DateTime.Now.ToString("dd.MM, dddd, HH:mm") + "</first-name></coverpage>");
+                xw.WriteRaw(@"<author><first-name>" + DateTime.Now.ToString("dd.MM - dddd - HH:mm") + "</first-name></author>");
                 xw.WriteElementString("book-title", "e2Kindle feeds");
                 xw.WriteElementString("lang", "ru");
                 xw.WriteRaw(@"<coverpage><image l:href=""#cover.png""/></coverpage>");
                 xw.WriteElementString("annotation",
-                    string.Format("Лент новостей: {0}; записей в них: {1}.", feedEntries.Count(), feedEntries.Sum(gr => gr.Count())));
+                    string.Format("Feeds: {0}; entries: {1}.", feedEntries.Count(), feedEntries.Sum(gr => gr.Count())));
                 xw.WriteEndElement();
 
                 xw.WriteStartElement("document-info");
-                xw.WriteRaw(@"<author><nickname>chersanya</nickname></coverpage>");
+                xw.WriteRaw(@"<author><nickname>chersanya</nickname></author>");
                 xw.WriteElementString("program-used", "e2Kindle");
                 xw.WriteElementString("date", DateTime.Now.ToString("yyyy-MM-dd"));
                 xw.WriteElementString("id", DateTime.Now.ToString("yyyyMMddHHmmssFF"));

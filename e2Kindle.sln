@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "e2Kindle", "e2Kindle.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HTMLparserLibDotNet20", "..\HTMLparser\HTMLparserLibDotNet20.csproj", "{499C0FA8-9B6C-4590-926B-FF5061AE6C18}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{18E2724D-7161-4313-8CF4-0793932B81AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,12 @@ Global
 		{499C0FA8-9B6C-4590-926B-FF5061AE6C18}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{499C0FA8-9B6C-4590-926B-FF5061AE6C18}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{499C0FA8-9B6C-4590-926B-FF5061AE6C18}.Release|x86.ActiveCfg = Release|Any CPU
+		{18E2724D-7161-4313-8CF4-0793932B81AB}.Debug|Any CPU.ActiveCfg = Debug
+		{18E2724D-7161-4313-8CF4-0793932B81AB}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{18E2724D-7161-4313-8CF4-0793932B81AB}.Debug|x86.ActiveCfg = Debug
+		{18E2724D-7161-4313-8CF4-0793932B81AB}.Release|Any CPU.ActiveCfg = Release
+		{18E2724D-7161-4313-8CF4-0793932B81AB}.Release|Mixed Platforms.ActiveCfg = Release
+		{18E2724D-7161-4313-8CF4-0793932B81AB}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

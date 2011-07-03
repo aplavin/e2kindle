@@ -85,20 +85,20 @@ namespace e2Kindle
         {
             if (bitmap == null) throw new ArgumentNullException("bitmap");
 
-            // Encoder parameter for image quality
-            EncoderParameter qualityParam = new EncoderParameter(Encoder.Quality, 20L);
+            //// Encoder parameter for image quality
+            //EncoderParameter qualityParam = new EncoderParameter(Encoder.Quality, 20L);
 
-            // Jpeg image codec
-            ImageCodecInfo jpegCodec = GetEncoderInfo("image/jpeg");
+            //// Jpeg image codec
+            //ImageCodecInfo jpegCodec = GetEncoderInfo("image/jpeg");
 
-            EncoderParameters encoderParams = new EncoderParameters(1);
-            encoderParams.Param[0] = qualityParam;
+            //EncoderParameters encoderParams = new EncoderParameters(1);
+            //encoderParams.Param[0] = qualityParam;
 
-            using (var stream = new MemoryStream())
-            {
-                bitmap.Save(stream, jpegCodec, encoderParams);
-                return stream.ToArray();
-            }
+            //using (var stream = new MemoryStream())
+            //{
+            //    bitmap.Save(stream, jpegCodec, encoderParams);
+            //    return stream.ToArray();
+            //}
 
             using (var stream = new MemoryStream())
             {

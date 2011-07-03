@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -7,9 +8,9 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using e2Kindle.Properties;
 using NLog;
+using Brush = System.Windows.Media.Brush;
 
 namespace e2Kindle
 {
@@ -29,6 +30,14 @@ namespace e2Kindle
 
             InitializeComponent();
             _instance = this;
+
+            if (!Settings.Default.WindowRectangle.IsEmpty)
+            {
+                Left = Settings.Default.WindowRectangle.Left;
+                Top = Settings.Default.WindowRectangle.Top;
+                Width = Settings.Default.WindowRectangle.Width;
+                Height = Settings.Default.WindowRectangle.Height;
+            }
         }
 
         private void SendClick(object sender, RoutedEventArgs e)
@@ -48,8 +57,13 @@ namespace e2Kindle
                         ContentProcess.CreateFb2(writer, entries);
                     }
 
-                    logger.Info("Feeds are downloaded and saved");
-                    //logger.Info("Sending feeds...");
+                    logger.Info("Feeds are downloaded and saved as FB2");
+                    logger.Info("Converting to needed formats");
+
+                    ContentProcess.CalibreConvert("out.fb2", Settings.Default.NeededFormats.Split(' '));
+
+                    logger.Info("Converted to all needed formats");
+                    logger.Info("Marking downloaded and saved items as read at Google Reader");
 
                     if (Settings.Default.MarkAsRead)
                     {
@@ -111,6 +125,9 @@ namespace e2Kindle
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             logger.Info("e2Kindle exit");
+
+            Settings.Default.WindowRectangle = new Rectangle((int)Left, (int)Top, (int)Width, (int)Height);
+            Settings.Default.Save();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

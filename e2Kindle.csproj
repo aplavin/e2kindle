@@ -115,6 +115,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WPFLocalizeExtension">
+      <HintPath>..\WPFLocalizeExtension.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -186,9 +189,11 @@
     <Resource Include="Resources\feed.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\cover.png">
+    <Content Include="Resources\cover.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
+    <Resource Include="Resources\newspaper_go.png" />
+    <Resource Include="Resources\question_16.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HTMLparser\HTMLparserLibDotNet20.csproj">
