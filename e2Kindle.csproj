@@ -192,6 +192,7 @@
     <Content Include="Resources\cover.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\newspaper.png" />
     <Resource Include="Resources\newspaper_go.png" />
     <Resource Include="Resources\question_16.png" />
   </ItemGroup>

@@ -34,7 +34,7 @@
             </ListView.View>
         </ListView>
 
-        <ToolBar Margin="12,12,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+        <ToolBar Name="toolbar" Margin="12,12,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
             <Button Click="LoadFeedsClick" ToolTip="Load feeds from Google Reader.">
                 <Image Source="Resources/google_go.png" Stretch="None" />
             </Button>

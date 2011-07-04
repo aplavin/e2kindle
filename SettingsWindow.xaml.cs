@@ -34,6 +34,7 @@ namespace e2Kindle
             Settings.Default.MarkAsRead = (bool)cbMarkAsRead.IsChecked;
             Settings.Default.KindleEmail = tbKindleEmail.Text;
             Settings.Default.LoadFullContent = (bool)cbLoadFull.IsChecked;
+            Settings.Default.NeededFormats = tbFormats.Text;
 
             Settings.Default.Save();
         }
@@ -45,6 +46,7 @@ namespace e2Kindle
             cbMarkAsRead.IsChecked = Settings.Default.MarkAsRead;
             tbKindleEmail.Text = Settings.Default.KindleEmail;
             cbLoadFull.IsChecked = Settings.Default.LoadFullContent;
+            tbFormats.Text = Settings.Default.NeededFormats;
         }
 
         private void CancelClick(object sender, RoutedEventArgs e)

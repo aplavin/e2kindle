@@ -145,7 +145,7 @@ namespace e2Kindle
                              Id = v["id"].Value<string>(),
                              Link = Utils.CatchNullReference(() => v["alternate"].First["href"].Value<string>(), null),
                              Title = Utils.CatchNullReference(() => v["title"].Value<string>(), "[No title]"),
-                             Content = Utils.CatchNullReference(() => v["summary"]["content"].Value<string>(), null),
+                             Content = Utils.CatchNullReference(() => v["summary"]["content"].Value<string>(), "[No content]"),
                              Published = new DateTime(1970, 1, 1) + TimeSpan.FromSeconds(v["published"].Value<long>()),
                              Feed = feed
                          });

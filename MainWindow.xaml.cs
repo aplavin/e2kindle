@@ -63,10 +63,10 @@ namespace e2Kindle
                     ContentProcess.CalibreConvert("out.fb2", Settings.Default.NeededFormats.Split(' '));
 
                     logger.Info("Converted to all needed formats");
-                    logger.Info("Marking downloaded and saved items as read at Google Reader");
 
                     if (Settings.Default.MarkAsRead)
                     {
+                        logger.Info("Marking downloaded and saved items as read at Google Reader");
                         GoogleReader.MarkAsRead(entries.SelectMany(gr => gr));
                         logger.Info("Marked all entries as read");
                     }
@@ -138,7 +138,11 @@ namespace e2Kindle
         public static void SetWait(bool wait)
         {
             _instance.Dispatcher.Invoke(
-                new Action(() => { _instance.Cursor = wait ? Cursors.Wait : Cursors.Arrow; }),
+                new Action(() =>
+                               {
+                                   _instance.Cursor = wait ? Cursors.Wait : Cursors.Arrow;
+                                   _instance.toolbar.IsEnabled = !wait;
+                               }),
                 null);
         }
 

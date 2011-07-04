@@ -80,7 +80,7 @@ namespace e2Kindle
 
         public static bool Exists(string url)
         {
-            if (url == null) throw new ArgumentNullException("url");
+            if (url == null) return false;
             return Instances.Count(i => i.IsMyUrl(url)) == 1;
         }
 
