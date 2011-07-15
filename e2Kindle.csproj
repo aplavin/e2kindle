@@ -95,10 +95,6 @@
     <OutputPath>bin\x64\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json.Net35, Version=4.0.2.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>dlls\Newtonsoft.Json.Net35.dll</HintPath>
-    </Reference>
     <Reference Include="NLog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL" />
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
@@ -115,28 +111,23 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="WPFLocalizeExtension">
-      <HintPath>..\WPFLocalizeExtension.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ContentProcess.cs" />
-    <Compile Include="CollectionUtils.cs" />
-    <Compile Include="FullContent.cs" />
-    <Compile Include="GoogleReader.cs" />
-    <Compile Include="ImageUtils.cs" />
+    <Compile Include="ContentProcess\Calibre.cs" />
+    <Compile Include="ContentProcess\ContentProcess.cs" />
+    <Compile Include="ContentProcess\FullContent.cs" />
+    <Compile Include="ContentProcess\HabrContent.cs" />
+    <Compile Include="ContentProcess\HtmlUtils.cs" />
     <Compile Include="NLogTarget.cs" />
-    <Compile Include="Pair.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="SettingsWindow.xaml.cs">
+    <Compile Include="UI\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils.cs" />
-    <Page Include="MainWindow.xaml">
+    <Page Include="UI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -144,11 +135,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="UI\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="SettingsWindow.xaml">
+    <Page Include="UI\SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -173,11 +164,10 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="dlls\HTMLparser.7z" />
-    <None Include="NLog.config">
+    <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
-    </None>
+    </Content>
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -197,15 +187,16 @@
     <Resource Include="Resources\question_16.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HTMLparser\HTMLparserLibDotNet20.csproj">
-      <Project>{499C0FA8-9B6C-4590-926B-FF5061AE6C18}</Project>
-      <Name>HTMLparserLibDotNet20</Name>
+    <ProjectReference Include="..\GoogleAPI\GoogleApi.csproj">
+      <Project>{06E98386-B41B-4629-9FB0-613ECBBF6188}</Project>
+      <Name>GoogleApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{4E4A7BD0-821F-44E2-8842-BC49CDDA0D73}</Project>
+      <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="dlls\Newtonsoft.Json.Net35.dll" />
-    <None Include="dlls\Newtonsoft.Json.Net35.pdb" />
-    <None Include="dlls\Newtonsoft.Json.Net35.xml" />
     <Resource Include="Resources\email_go.png" />
     <Resource Include="Resources\settings.png" />
     <Resource Include="Resources\feed_go_16.png" />

@@ -1,20 +1,16 @@
-﻿using System.Windows;
-using NLog;
-using NLog.Config;
-
-namespace e2Kindle
+﻿namespace e2Kindle
 {
+    using System.Windows;
+    using NLog.Config;
+
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {
-        private static readonly Logger logger;
-
         static App()
         {
             ConfigurationItemFactory.Default.Targets.RegisterDefinition("MyTarget", typeof(NLogTarget));
-            logger = LogManager.GetCurrentClassLogger();
         }
     }
 }

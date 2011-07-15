@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using e2Kindle.Properties;
-
-namespace e2Kindle
+﻿namespace e2Kindle.UI
 {
+    using System;
+    using System.ComponentModel;
+    using System.Windows;
+
+    using e2Kindle.Properties;
+
+    using GoogleAPI.GoogleReader;
+
     /// <summary>
     /// Interaction logic for SettingsWindow.xaml
     /// </summary>
@@ -36,10 +29,17 @@ namespace e2Kindle
             Settings.Default.LoadFullContent = (bool)cbLoadFull.IsChecked;
             Settings.Default.NeededFormats = tbFormats.Text;
 
+            GoogleReader.SetCredentials(Settings.Default.GoogleUser, Settings.Default.GooglePassword);
+
             Settings.Default.Save();
         }
 
-        private void Window_Loaded(object sender, EventArgs e)
+        private void CancelClick(object sender, RoutedEventArgs e)
+        {
+            Hide();
+        }
+
+        private void WindowLoaded(object sender, EventArgs e)
         {
             tbUsername.Text = Settings.Default.GoogleUser;
             tbPassword.Text = Settings.Default.GooglePassword;
@@ -49,12 +49,7 @@ namespace e2Kindle
             tbFormats.Text = Settings.Default.NeededFormats;
         }
 
-        private void CancelClick(object sender, RoutedEventArgs e)
-        {
-            Hide();
-        }
-
-        private void Window_Closing(object sender, CancelEventArgs e)
+        private void WindowClosing(object sender, CancelEventArgs e)
         {
             Hide();
             e.Cancel = true;
