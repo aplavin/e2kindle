@@ -3,13 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
 
     /// <summary>
     /// Methods to work with Calibre using command line.
     /// </summary>
-    public class Calibre
+    public static class Calibre
     {
         /// <summary>
         /// Converts inputFile to format (extension) outputFormat using command ebook-convert from Calibre.
@@ -18,6 +19,8 @@
         {
             if (inputFile == null) throw new ArgumentNullException("inputFile");
             if (outputFormat == null) throw new ArgumentNullException("outputFormat");
+
+            inputFile = Path.GetFullPath(inputFile);
 
             string outputFile = Path.ChangeExtension(inputFile, outputFormat.ToLower());
             if (inputFile == outputFile) return;
@@ -29,13 +32,16 @@
             {
                 try
                 {
-                    if (ProcessUtils.RunProcess("ebook-convert", inputFile, outputFile) != 0)
+                    using (var process = Process.Start("ebook-convert", @"""{0}"" ""{1}""".FormatWith(inputFile, outputFile)))
                     {
-                        throw new FileFormatException(
-                            string.Format(
-                                "Format (extension) of input (*{0}) or output (*{1}) file isn't supported by Calibre.",
-                                Path.GetExtension(inputFile),
-                                Path.GetExtension(outputFile)));
+                        process.WaitForExit();
+
+                        if (process.ExitCode != 0)
+                        {
+                            throw new FileFormatException(
+                                "Format (extension) of input (*{0}) or output (*{1}) file isn't supported by Calibre.".
+                                FormatWith(Path.GetExtension(inputFile), Path.GetExtension(outputFile)));
+                        }
                     }
                 }
                 catch (Win32Exception ex)
@@ -45,7 +51,7 @@
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format("Can't convert '{0}' to '{1}'.", inputFile, outputFile), ex);
+                throw new Exception("Can't convert '{0}' to '{1}'.".FormatWith(inputFile, outputFile), ex);
             }
         }
 

@@ -2,28 +2,49 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Drawing;
     using System.IO;
     using System.Linq;
-    using System.Net;
-    using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading;
-    using System.Threading.Tasks;
     using System.Xml;
 
+    using HtmlParserMajestic.Wrappers;
+
     using e2Kindle.Properties;
-
     using GoogleAPI.GoogleReader;
-
-    using Majestic12;
-
     using NLog;
 
     public static class ContentProcess
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
+        private static readonly string[] Styles;
+
+        static ContentProcess()
+        {
+            var stylesTemp = new List<string> { 
+                ".s {text-decoration: line-through;}", 
+                ".u {text-decoration: underline;}",
+                ".i {font-style: italic;}",
+                ".b {font-weight: bold;}",
+                ".mono {font-family: monospace;}",
+                ".small {font-size: small;}",
+                ".large {font-size: large;}",
+                ".xlarge {font-size: x-large;}",
+                ".xxlarge {font-size: xx-large;}",
+                ".scaps {font-variant: small-caps;}",
+            };
+
+            for (int i = 0; i <= 0xF; i++)
+            {
+                char col = i.ToString("X")[0];
+                string color = new string(col, 6);
+                stylesTemp.Add(".col{0} {{color: #{1};}}".FormatWith(char.ToLower(col), color));
+            }
+
+            Styles = stylesTemp.ToArray();
+        }
 
         /// <summary>
         /// Images which have any string from this array in URL will not be downloaded.
@@ -33,7 +54,7 @@
         /// <summary>
         /// Helper variable to ensure that all images in the resulting FB2 file will have unique names.
         /// </summary>
-        private static int uniqueImgNum = 0;
+        private static int _uniqueImgNum = 0;
 
         /// <summary>
         /// Downloads all images from this HTML document (excluding ones those contain any string from BadImageStrings) and make their names unique numbers. JPG format is used.
@@ -47,7 +68,7 @@
             // this regex matches all img src attributes. Yes, it's not good-looking =)
             var matches = Regex.Matches(htmlContent, @"(?<=img+.+src\=[\x27\x22])(?<Url>[^\x27\x22]*)(?=[\x27\x22])");
             var positions = from Match match in matches
-                            where !BadImageStrings.Any(bad => match.Value.Contains(bad))
+                            where !BadImageStrings.Any(match.Value.Contains)
                             select Tuple.Create(match.Index, match.Length);
 
             var images = new List<KeyValuePair<string, byte[]>>();
@@ -70,12 +91,12 @@
                 catch (Exception ex)
                 {
                     // couldn't recode image - log this and skip
-                    logger.WarnException(string.Format("Can't load or convert image from '{0}'.", url), ex);
+                    logger.WarnException("Can't load or convert image from '{0}'.".FormatWith(url), ex);
                     continue;
                 }
 
                 // create unique name for image
-                string imageName = string.Format("{0}.jpg", Interlocked.Increment(ref uniqueImgNum));
+                string imageName = "{0}.jpg".FormatWith(Interlocked.Increment(ref _uniqueImgNum));
 
                 // add image to the output dictionary
                 images.Add(new KeyValuePair<string, byte[]>(imageName, image));
@@ -94,7 +115,7 @@
         /// </summary>
         /// <param name="content">Before: HTML code to be converted. After: converted FB2 code.</param>
         /// <param name="binaries">List of binary sections in the FB2 document. This function appends to it.</param>
-        public static string HtmlToFb2(string content, ref List<KeyValuePair<string, byte[]>> binaries)
+        public static string HtmlToFb2(string content, List<KeyValuePair<string, byte[]>> binaries)
         {
             if (content == null) throw new ArgumentNullException("content");
             if (binaries == null) throw new ArgumentNullException("binaries");
@@ -105,26 +126,14 @@
             // and add them to binaries list
             binaries.AddRange(images);
 
-            var htmlChunks = (HtmlUtils.ParseHtml(content) ?? Enumerable.Empty<HTMLchunk>()).
-                WhereNot(c => c.oType == HTMLchunkType.Text && c.oHTML.Trim() == string.Empty). // remove empty texts
-                WhereNot(c => c.oType == HTMLchunkType.Comment || c.oType == HTMLchunkType.Script). // remove comments and scripts
+            var htmlChunks =
+                HtmlParser.Parse(content).
+                WhereNot(c => c.Type == HtmlChunkType.Text && c.Text.IsNullOrWhiteSpace()). // remove empty texts
+                WhereNot(c => c.Type.IsOneOf(HtmlChunkType.Comment, HtmlChunkType.Script)). // remove comments and scripts
                 WhereNot(c =>
-                    c.sTag == "img" && // remove img tags which are not suitable
-                    (c.oParams == null || // if it has no params
-                    !c.oParams.ContainsKey("src") || // or has params, but no "src" one
-                    !Regex.IsMatch(c.oParams["src"], @"^\d+.jpe?g$"))). // or src isn't in the format {digits}.jp[e]g
-                ToList();
-
-            // replace links with just underlined text - links have not much use for us
-            htmlChunks.ForEach(c =>
-                                   {
-                                       if (c.sTag == "a")
-                                       {
-                                           c.sTag = "u";
-                                           c.iParams = 0;
-                                           c.oParams.Clear();
-                                       }
-                                   });
+                    c.TagName == "img" && // remove img tags which are not suitable
+                    !c.ParameterMatches("src", new Regex(@"^\d+.jpe?g$"))). // which src isn't in the format {digits}.jp[e]g
+                    ToList();
 
             // remove tags which are opened and closed immediately
             // repeat while we changed something to delete nested tags
@@ -134,9 +143,10 @@
                 changed = false;
                 for (int i = 0; i < htmlChunks.Count; i++)
                 {
-                    if (i + 1 < htmlChunks.Count && htmlChunks[i].oType == HTMLchunkType.OpenTag
-                        && !htmlChunks[i].bEndClosure && htmlChunks[i + 1].oType == HTMLchunkType.CloseTag
-                        && !htmlChunks[i + 1].bEndClosure && htmlChunks[i].sTag == htmlChunks[i + 1].sTag)
+                    if (i + 1 < htmlChunks.Count &&
+                        htmlChunks[i].TagType == HtmlTagType.Open &&
+                        htmlChunks[i + 1].TagType == HtmlTagType.Close &&
+                        htmlChunks[i].TagName == htmlChunks[i + 1].TagName)
                     {
                         // remove both open and close tags (order is important)
                         htmlChunks.RemoveAt(i + 1);
@@ -157,18 +167,23 @@
         /// <summary>
         /// Creates FB2 document of all the FeedItems and writes it to the writer.
         /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="feedEntries"></param>
-        public static void CreateFb2(TextWriter writer, IEnumerable<FeedEntry> feedEntries)
+        public static void CreateFb2(TextWriter writer, IEnumerable<FeedEntry> feedEntries, Action<int, int> callback = null)
         {
             if (writer == null) throw new ArgumentNullException("writer");
             if (feedEntries == null) throw new ArgumentNullException("feedEntries");
+
+            if (callback == null) callback = (i, j) => { }; // do null check once
+
+            feedEntries = feedEntries.ToList(); // enumerate it once
 
             logger.Info("Processing {0} feeds entries", feedEntries.Count());
 
             var binaries = new List<KeyValuePair<string, byte[]>>();
 
-            var entries = feedEntries.// AsParallel().
+            int cnt = 0;
+            callback(cnt, feedEntries.Count());
+
+            var entries = feedEntries.//AsParallel().
                 Select(e =>
                 {
                     string content = e.Content;
@@ -176,25 +191,27 @@
                     {
                         content = FullContent.Get(e.Link);
                         if (content == null)
-                            content += string.Format(
-                                "<hr/>[Full article content couldn't be downloaded, although url <u>{0}</u> is supported]",
-                                e.Link);
+                            content +=
+                                "<hr/>[Full article content couldn't be downloaded, although url <u>{0}</u> is supported]".
+                                FormatWith(e.Link);
                     }
 
+                    callback(Interlocked.Increment(ref cnt), feedEntries.Count());
                     return new
                     {
                         FeedTitle = e.Feed.Title,
                         Title = e.Title,
                         Published = e.Published,
-                        Content = HtmlToFb2(content, ref binaries)
+                        Content = HtmlToFb2(content, binaries)
                     };
                 }).
                 GroupBy(e => e.FeedTitle).
                 OrderBy(gr => gr.Key).
                 ToList();
+            callback(feedEntries.Count(), feedEntries.Count());
 
             logger.Info("Creating XML structure of the FB2 (intermediate format)");
-            using (XmlWriter xw = XmlWriter.Create(writer))
+            using (XmlWriter xw = XmlWriter.Create(writer, new XmlWriterSettings { Indent = true }))
             {
                 xw.WriteStartDocument();
                 xw.WriteStartElement("FictionBook", "http://www.gribuser.ru/xml/fictionbook/2.0");
@@ -210,8 +227,7 @@
                 xw.WriteRaw(@"<coverpage><image l:href=""#cover.png""/></coverpage>");
                 xw.WriteElementString(
                     "annotation",
-                    string.Format(
-                    "Feeds: {0}; entries: {1}.",
+                    "Feeds: {0}; entries: {1}.".FormatWith(
                     entries.Count(),
                     entries.Sum(gr => gr.Count())));
                 xw.WriteEndElement();
@@ -226,10 +242,8 @@
                 xw.WriteEndElement();
 
                 xw.WriteStartElement("stylesheet");
-                xw.WriteString(".ss {text-decoration: line-through;}");
-                xw.WriteString(".u {text-decoration: underline;}");
-                xw.WriteString(".i {font-style: italic;}");
-                xw.WriteString(".b {font-weight: bold;}");
+                xw.WriteAttributeString("type", "text/css");
+                Styles.ForEach(xw.WriteString);
                 xw.WriteEndElement();
 
                 xw.WriteStartElement("body");
@@ -253,6 +267,14 @@
 
                 xw.WriteEndElement();
 
+
+                xw.WriteStartElement("binary");
+                xw.WriteAttributeString("id", "cover.png");
+                xw.WriteAttributeString("content-type", "image/png");
+                byte[] coverData = File.ReadAllBytes("Resources/cover.png");
+                xw.WriteBase64(coverData, 0, coverData.Length);
+                xw.WriteEndElement();
+
                 foreach (var binary in binaries)
                 {
                     xw.WriteStartElement("binary");
@@ -261,11 +283,6 @@
                     xw.WriteBase64(binary.Value, 0, binary.Value.Length);
                     xw.WriteEndElement();
                 }
-
-                string coverBinary = @"<binary id=""cover.png"" content-type=""image/png"">"
-                                     + Convert.ToBase64String(File.ReadAllBytes("Resources/cover.png"))
-                                     + "</binary>";
-                xw.WriteRaw(coverBinary);
 
                 xw.WriteEndDocument();
             }

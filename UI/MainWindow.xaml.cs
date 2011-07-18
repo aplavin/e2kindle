@@ -1,15 +1,21 @@
 ﻿namespace e2Kindle.UI
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics;
     using System.Drawing;
     using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Threading;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Documents;
     using System.Windows.Input;
+
+    using HtmlParserMajestic.Wrappers;
+
     using e2Kindle.ContentProcess;
     using e2Kindle.Properties;
     using GoogleAPI.GoogleReader;
@@ -30,6 +36,9 @@
 
         public MainWindow()
         {
+            var b = new List<KeyValuePair<string, byte[]>>();
+            string s = ContentProcess.HtmlToFb2(@"1. <code>src=#</code> заставляет img загрузить картинку с того же урла, что и сам документ т.е. <a href=""http://demoseen.com/windowpane/magister.html#"">demoseen.com/windowpane/magister.html#</a> тегу img пофиг на майм-тип, поэтому он воспринимает текст как картинку.<br/>", b);
+
             this.Feeds = new ObservableCollection<Feed>();
             InitializeComponent();
             instance = this;
@@ -80,6 +89,7 @@
             new Thread(() =>
             {
                 SetWait(true);
+                logger.Info("----------");
                 logger.Info("Getting feed entries ({0} feeds)", feeds.Count);
 
                 try
@@ -87,15 +97,27 @@
                     var entries = feeds.GetEntries().Flatten();
                     using (var writer = new StreamWriter("out.fb2"))
                     {
-                        ContentProcess.CreateFb2(writer, entries);
+                        ContentProcess.CreateFb2(writer,
+                            entries,
+                            (cnt, all) => Dispatcher.Invoke(new Action(() =>
+                            {
+                                progressBar.Maximum = all;
+                                progressBar.Value = cnt;
+                                progressBar.ToolTip = "{0}/{1}".FormatWith(cnt, all);
+                            }), null));
                     }
 
                     logger.Info("Feeds are downloaded and saved as FB2");
-                    logger.Info("Converting to needed formats");
+                    Process.Start(".");
 
-                    Calibre.Convert("out.fb2", Settings.Default.NeededFormats.Split(' '));
+                    if (!Settings.Default.NeededFormats.IsNullOrWhiteSpace())
+                    {
+                        logger.Info("Converting to needed formats: " + Settings.Default.NeededFormats);
 
-                    logger.Info("Converted to all needed formats");
+                        Calibre.Convert("out.fb2", Settings.Default.NeededFormats.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+
+                        logger.Info("Converted to all needed formats");
+                    }
 
                     if (Settings.Default.MarkAsRead)
                     {
@@ -108,6 +130,8 @@
                 {
                     logger.ErrorException(ex.Message, ex);
                 }
+
+                logger.Info("----------");
 
                 SetWait(false);
             }).Start();
@@ -127,6 +151,7 @@
             new Thread(() =>
             {
                 SetWait(true);
+                logger.Info("----------");
                 logger.Info("Loading feeds from Google Reader");
 
                 try
@@ -137,8 +162,7 @@
                         new Action(() =>
                         {
                             listView.SelectedItems.Clear();
-                            Feeds.Where(f => f.UnreadCount > 0).ForEach(
-                                f => listView.SelectedItems.Add(f));
+                            this.Feeds.Where(f => f.UnreadCount > 0).ForEach(f => this.listView.SelectedItems.Add(f));
                         }),
                         null);
 
@@ -147,6 +171,7 @@
                         feeds.Count(),
                         feeds.Count(f => f.UnreadCount > 0),
                         feeds.Sum(f => f.UnreadCount));
+                    logger.Info("----------");
                 }
                 catch (GoogleReaderException ex)
                 {

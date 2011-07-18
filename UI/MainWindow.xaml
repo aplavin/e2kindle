@@ -5,7 +5,7 @@
         Title="MainWindow" Icon="/Resources/Icon.ico"
         Loaded="WindowLoaded"
         Closing="WindowClosing"
-        Height="548" Width="697"
+        Height="510" Width="697"
         MinHeight="350" MinWidth="230">
     <Grid>
         <Grid.RowDefinitions>
@@ -13,7 +13,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ListView HorizontalAlignment="Stretch" Margin="12,61,12,20" Name="listView" VerticalAlignment="Stretch" ItemsSource="{Binding Path=Feeds}" SelectionMode="Extended">
+        <ListView HorizontalAlignment="Stretch" Margin="12,61,12,6" Name="listView" VerticalAlignment="Stretch" ItemsSource="{Binding Path=Feeds}" SelectionMode="Extended">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="ToolTip" Value="{Binding Path=Url}" />
@@ -46,6 +46,8 @@
             </Button>
         </ToolBar>
 
-        <RichTextBox Grid.Row="1" Height="150" HorizontalAlignment="Stretch" Margin="12,0,12,12" Name="richTextBox" VerticalAlignment="Bottom" IsReadOnly="True" VerticalScrollBarVisibility="Auto" FontWeight="Bold" />
+        <RichTextBox Grid.Row="1" Height="150" HorizontalAlignment="Stretch" Margin="12,20,12,12" Name="richTextBox" VerticalAlignment="Bottom" IsReadOnly="True" VerticalScrollBarVisibility="Auto" FontWeight="Bold" />
+
+        <ProgressBar Grid.Row="1" Height="20" HorizontalAlignment="Stretch" Margin="12,0,12,0" Name="progressBar" VerticalAlignment="Top" />
     </Grid>
 </Window>

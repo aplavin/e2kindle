@@ -191,6 +191,10 @@
       <Project>{06E98386-B41B-4629-9FB0-613ECBBF6188}</Project>
       <Name>GoogleApi</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HtmlParserMajestic\HtmlParserMajestic.csproj">
+      <Project>{499C0FA8-9B6C-4590-926B-FF5061AE6C18}</Project>
+      <Name>HtmlParserMajestic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Utilities\Utilities.csproj">
       <Project>{4E4A7BD0-821F-44E2-8842-BC49CDDA0D73}</Project>
       <Name>Utilities</Name>

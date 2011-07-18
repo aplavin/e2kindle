@@ -1,16 +1,15 @@
-﻿namespace e2Kindle
+﻿namespace e2Kindle.ContentProcess
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
 
-    using e2Kindle.ContentProcess;
-
-    using Majestic12;
+    using HtmlParserMajestic.Wrappers;
 
     public class HabrContent : FullContent
     {
-        private const bool AddComments = true;
+        private const bool ADD_COMMENTS = true;
 
         private static readonly Regex UrlRegex = new Regex(
             @"^(https?://)?(www\.)?(m\.)?(habra)?habr.ru/((blogs/\w+)|(linker/go)|(company/\w+/blog)|(post))/(?<Num>\d+)/?$",
@@ -32,15 +31,15 @@
         {
             if (content == null) throw new ArgumentNullException("content");
 
-            var pageChunks = HtmlUtils.ParseHtml(content);
+            var pageChunks = HtmlParser.Parse(content).ToList();
 
-            var resultChunks = Enumerable.Empty<HTMLchunk>();
+            var resultChunks = Enumerable.Empty<HtmlChunk>();
 
             // article is in <div class="txt"> tag
             var articleChunks = pageChunks.TagContent("div", Tuple.Create("class", "txt"));
             resultChunks = resultChunks.Concat(articleChunks);
 
-            if (AddComments)
+            if (ADD_COMMENTS)
             {
                 // comments are in <div class="cmts"> tag
                 var commentsChunks = pageChunks.TagContent("div", Tuple.Create("class", "cmts")).
@@ -51,19 +50,17 @@
                     if (i + 3 < commentsChunks.Count &&
                         commentsChunks[i].IsOpenTag("div", Tuple.Create("class", "m")))
                     {
-                        commentsChunks[i].sTag = "i";
-                        commentsChunks[i + 2].sTag = "i";
+                        commentsChunks[i] = new HtmlChunk("i", HtmlTagType.Open); // instead of <div class=m>
+                        commentsChunks[i + 2] = new HtmlChunk("i", HtmlTagType.Close); // instead of </div>
 
-                        commentsChunks[i + 1].oHTML = "-> " + commentsChunks[i + 1].oHTML.GetBefore(",") + "<br/>";
-                        commentsChunks.Insert(i + 2, new HTMLchunk());
+                        commentsChunks[i + 1] = new HtmlChunk("-&gt; " + commentsChunks[i + 1].Text.GetBefore(",")); // from "{nickname}, {time}" to "-> {nickname}"
+                        commentsChunks.Insert(i + 2, new HtmlChunk("br", HtmlTagType.SelfClose)); // add line break between nickname and comment
                     }
                 }
 
                 resultChunks = resultChunks.
-                    // append separator before comments
-                    Concat(new HTMLchunk(true) { oType = HTMLchunkType.OpenTag, sTag = "hr" }).
-                    // and comments themselves
-                    Concat(commentsChunks);
+                    Concat(new HtmlChunk("hr", HtmlTagType.SelfClose)). // add separator between article and comments
+                    Concat(commentsChunks); // and comments themselves
             }
 
             return resultChunks.CombineToHtml();

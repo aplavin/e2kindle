@@ -1,4 +1,4 @@
-﻿namespace e2Kindle
+﻿namespace e2Kindle.ContentProcess
 {
     using System;
     using System.Collections.Generic;
@@ -34,18 +34,17 @@
             FullContent instance = Instances.Single(i => i.IsMyUrl(url));
 
             url = instance.ProcessUrl(url);
-            string data;
             try
             {
-                data = InternetUtils.Fetch(url);
+                string data = InternetUtils.Fetch(instance.ProcessUrl(url));
+
+                data = instance.ProcessContent(data);
+                return data;
             }
             catch
             {
                 return null;
             }
-
-            data = instance.ProcessContent(data);
-            return data;
         }
 
         /// <summary>
