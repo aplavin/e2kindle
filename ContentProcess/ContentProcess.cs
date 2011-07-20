@@ -80,6 +80,12 @@
                 // get image url from html code
                 string url = htmlContent.Substring(position.Item1, position.Item2);
 
+                // some heuristics for invalid URLs
+                if (url.StartsWith("https://http://")) url = url.Substring(8);
+                else if (url.StartsWith("https://https://")) url = url.Substring(8);
+                else if (url.StartsWith("http://https://")) url = url.Substring(7);
+                else if (url.StartsWith("http://http://")) url = url.Substring(7);
+
                 // download the image
                 byte[] image;
                 try
@@ -128,7 +134,7 @@
 
             var htmlChunks =
                 HtmlParser.Parse(content).
-                WhereNot(c => c.Type == HtmlChunkType.Text && c.Text.IsNullOrWhiteSpace()). // remove empty texts
+                WhereNot(c => c.Type == HtmlChunkType.Text && c.Text.IsNullOrWhiteSpace() && !c.Text.Contains(' ')). // remove empty texts
                 WhereNot(c => c.Type.IsOneOf(HtmlChunkType.Comment, HtmlChunkType.Script)). // remove comments and scripts
                 WhereNot(c =>
                     c.TagName == "img" && // remove img tags which are not suitable
@@ -208,6 +214,7 @@
                 GroupBy(e => e.FeedTitle).
                 OrderBy(gr => gr.Key).
                 ToList();
+
             callback(feedEntries.Count(), feedEntries.Count());
 
             logger.Info("Creating XML structure of the FB2 (intermediate format)");

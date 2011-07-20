@@ -1,5 +1,9 @@
 syntax: glob
-bin
 obj
+bin/Debug
+Setup/Debug
+log.log
 syntax: regexp
 ReSharper
+StyleCop
+vshost.exe
