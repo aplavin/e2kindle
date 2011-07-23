@@ -15,7 +15,7 @@
     <framework targetVersion="4.0" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="e2Kindle.exe.manifest" size="10623">
+    <dependentAssembly dependencyType="install" codebase="Application Files\e2Kindle_0_3_0_4\e2Kindle.exe.manifest" size="10623">
       <assemblyIdentity name="e2Kindle.exe" version="0.3.0.4" publicKeyToken="0000000000000000" language="en" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>

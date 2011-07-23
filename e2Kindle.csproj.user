@@ -3,7 +3,7 @@
   <PropertyGroup>
     <ProjectView>ProjectFiles</ProjectView>
     <PublishUrlHistory>publish\|http://microsoft.com/</PublishUrlHistory>
-    <InstallUrlHistory>http://google.com/</InstallUrlHistory>
+    <InstallUrlHistory>http://code.google.com/p/e2kindle/|http://google.com/</InstallUrlHistory>
     <SupportUrlHistory />
     <UpdateUrlHistory />
     <BootstrapperUrlHistory />
