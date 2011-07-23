@@ -4,7 +4,7 @@
   <description asmv2:iconFile="Resources\Icon.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="e2Kindle" version="0.2.4218.32531" language="neutral" processorArchitecture="msil" />
+    <assemblyIdentity name="e2Kindle" version="0.2.4220.29535" language="neutral" processorArchitecture="msil" />
     <commandLine file="e2Kindle.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -55,38 +55,50 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="e2Kindle.exe" size="92672">
-      <assemblyIdentity name="e2Kindle" version="0.2.4218.32531" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="e2Kindle.exe" size="113664">
+      <assemblyIdentity name="e2Kindle" version="0.2.4220.29535" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>YSTog9H2smgb0LMmG7R35NDbwXg=</dsig:DigestValue>
+        <dsig:DigestValue>2jQmpv1JQlcbz2OHw8EjC1izAGU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="GoogleApi.dll" size="22528">
-      <assemblyIdentity name="GoogleApi" version="0.1.4218.32530" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="GoogleApi" version="0.1.4220.26048" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>j4m1yigWcJvIu07kvt7ptqe0M3w=</dsig:DigestValue>
+        <dsig:DigestValue>7/8VRJqS8WbgE5JEltCihYuiGJU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="HtmlParserMajestic.dll" size="44544">
-      <assemblyIdentity name="HtmlParserMajestic" version="3.1.4.32531" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="HtmlParserMajestic" version="3.1.4.26048" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>yloMhKp3ZHGKFagw1zyDTT5zhfA=</dsig:DigestValue>
+        <dsig:DigestValue>ZvbrxGBGH8ec8uNNU6P64DMSNtc=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Microsoft.Windows.Shell.dll" size="167808">
+      <assemblyIdentity name="Microsoft.Windows.Shell" version="3.5.41019.1" publicKeyToken="31BF3856AD364E35" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>S66efBtmPeGHach1D6NpPm/2B8k=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -115,14 +127,26 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Utilities.dll" size="30720">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="RibbonControlsLibrary.dll" size="802168">
+      <assemblyIdentity name="RibbonControlsLibrary" version="4.0.0.11019" publicKeyToken="31BF3856AD364E35" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>yXJS6HZ2Q7SVRnRSjo58V7+D8Hs=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Utilities.dll" size="31232">
       <assemblyIdentity name="Utilities" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>Fs3/HiXuzAu8d+J9lsReNWQWDSA=</dsig:DigestValue>
+        <dsig:DigestValue>McqjHAI9DwYzv7OVJuP5ElCwAXw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

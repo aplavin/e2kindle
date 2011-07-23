@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using System.Text.RegularExpressions;
 
     using HtmlParserMajestic.Wrappers;
@@ -14,11 +15,11 @@
         private static readonly Regex UrlRegex = new Regex(
             @"^(https?://)?(www\.)?(m\.)?(habra)?habr.ru/((blogs/\w+)|(linker/go)|(company/\w+/blog)|(post))/(?<Num>\d+)/?$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex CodeRegex = new Regex(@"<code.*>(.*)</code>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         protected override bool IsMyUrl(string url)
         {
-            if (url == null) throw new ArgumentNullException("url");
-            return UrlRegex.IsMatch(url);
+            return url != null && UrlRegex.IsMatch(url);
         }
 
         protected override string ProcessUrl(string url)
@@ -31,6 +32,16 @@
         {
             if (content == null) throw new ArgumentNullException("content");
 
+            // in <code>*</code> replace newline characters with <br> tag
+            // it's easier to perform this before parsing
+            /*content = CodeRegex.Replace(content,
+                match =>
+                {
+                    string codeContent = match.Groups[1].Value;
+                    if(codeContent.Count())
+                    return "<code>" + codeContent.Replace("\r\n", "\n").Replace("\n", "<br/>") + "</code>";
+                });*/
+
             var pageChunks = HtmlParser.Parse(content).ToList();
 
             var resultChunks = Enumerable.Empty<HtmlChunk>();
@@ -38,6 +49,7 @@
             // article is in <div class="txt"> tag
             var articleChunks = pageChunks.TagContent("div", Tuple.Create("class", "txt"));
             resultChunks = resultChunks.Concat(articleChunks);
+
 
             if (ADD_COMMENTS)
             {
@@ -55,6 +67,8 @@
 
                         commentsChunks[i + 1] = new HtmlChunk("-&gt; " + commentsChunks[i + 1].Text.GetBefore(",")); // from "{nickname}, {time}" to "-> {nickname}"
                         commentsChunks.Insert(i + 2, new HtmlChunk("br", HtmlTagType.SelfClose)); // add line break between nickname and comment
+
+                        commentsChunks.Insert(i, new HtmlChunk("br", HtmlTagType.SelfClose)); // add line break before comment (before author nickname)
                     }
                 }
 
@@ -66,7 +80,7 @@
             return resultChunks.CombineToHtml();
         }
 
-        /*public static bool Test()
+        public static bool Test()
         {
             var hc = new HabrContent();
             const string res = "http://m.habr.ru/post/123456/";
@@ -84,6 +98,6 @@
                res == hc.ProcessUrl("http://m.habrahabr.ru/blogs/abcdefgh/123456") &&
                res == hc.ProcessUrl("http://habrahabr.ru/blogs/abcdefgh/123456/") &&
                res == hc.ProcessUrl("http://habrahabr.ru/linker/go/123456/");
-        }*/
+        }
     }
 }

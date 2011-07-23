@@ -195,11 +195,8 @@
                     string content = e.Content;
                     if (Settings.Default.LoadFullContent && FullContent.Exists(e.Link))
                     {
-                        content = FullContent.Get(e.Link);
-                        if (content == null)
-                            content +=
-                                "<hr/>[Full article content couldn't be downloaded, although url <u>{0}</u> is supported]".
-                                FormatWith(e.Link);
+                        content = FullContent.Get(e.Link) ?? e.Content +
+                                  "<hr/>[Full article content couldn't be downloaded, although url <u>{0}</u> is supported]".FormatWith(e.Link);
                     }
 
                     callback(Interlocked.Increment(ref cnt), feedEntries.Count());

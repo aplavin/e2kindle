@@ -11,6 +11,9 @@
     using System.Windows;
     using System.Windows.Documents;
     using System.Windows.Input;
+
+    using Microsoft.Windows.Controls.Ribbon;
+
     using e2Kindle.ContentProcess;
     using e2Kindle.Properties;
     using GoogleAPI.GoogleReader;
@@ -20,7 +23,7 @@
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static MainWindow instance;
@@ -60,7 +63,7 @@
         private void SetWait(bool wait)
         {
             Cursor = wait ? Cursors.Wait : Cursors.Arrow;
-            toolbar.IsEnabled = !wait;
+            //toolbar.IsEnabled = !wait;
         }
 
         private void SettingsClick(object sender, RoutedEventArgs e)
@@ -143,29 +146,50 @@
 
             try
             {
-                var entries = feeds.GetEntries().Flatten().ToArray();
+                var entries = (await TaskEx.Run(() => GoogleReader.GetEntries(feeds))).
+                    Flatten().
+                    ToArray();
 
                 using (var writer = new StreamWriter("out.fb2"))
                 {
-                    await TaskEx.Run(() => ContentProcess.CreateFb2(writer, entries));
+                    await TaskEx.Run(
+                        () => ContentProcess.CreateFb2(
+                            writer,
+                            entries,
+                            (v, m) => logger.Info("Processed {0}/{1}", v, m))); // TODO: progress bar
                 }
 
                 logger.Info("Feeds are downloaded and saved as FB2");
+
+                if (XmlUtils.CheckValid("out.fb2")) logger.Info("FB2 file is valid as XML");
+                else logger.Warn("FB2 file isn't valid as XML");
+
                 Process.Start(".");
 
                 if (!Settings.Default.NeededFormats.IsNullOrWhiteSpace())
                 {
-                    logger.Info("Converting to needed formats: " + Settings.Default.NeededFormats);
+                    foreach (string format in Settings.Default.NeededFormats.Split(' ').WhereNot(StringUtils.IsEmpty))
+                    {
+                        logger.Info("Converting to {0}", format);
+                        string tFormat = format;
+                        try
+                        {
+                            await TaskEx.Run(() => Calibre.Convert("out.fb2", tFormat));
+                            logger.Info("Successfully converted to {0}", format);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.ErrorException("Conversion to {0} failed".FormatWith(format), ex);
+                        }
+                    }
 
-                    Calibre.Convert("out.fb2", Settings.Default.NeededFormats.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
-
-                    logger.Info("Converted to all needed formats");
+                    logger.Info("Converted to all specified formats");
                 }
 
                 if (Settings.Default.MarkAsRead)
                 {
                     logger.Info("Marking downloaded and saved items as read at Google Reader");
-                    GoogleReader.MarkAsRead(entries);
+                    await TaskEx.Run(() => GoogleReader.MarkAsRead(entries));
                     logger.Info("Marked all entries as read");
                 }
             }
@@ -177,56 +201,12 @@
             logger.Info("----------");
 
             SetWait(false);
+        }
 
-            /*new Thread(() =>
-            {
-                SetWait(true);
-                logger.Info("----------");
-                logger.Info("Getting feed entries ({0} feeds)", feeds.Count);
-
-                try
-                {
-                    var entries = feeds.GetEntries().Flatten();
-                    using (var writer = new StreamWriter("out.fb2"))
-                    {
-                        ContentProcess.CreateFb2(writer,
-                            entries,
-                            (cnt, all) => Dispatcher.Invoke(new Action(() =>
-                            {
-                                progressBar.Maximum = all;
-                                progressBar.Value = cnt;
-                                progressBar.ToolTip = "{0}/{1}".FormatWith(cnt, all);
-                            }), null));
-                    }
-
-                    logger.Info("Feeds are downloaded and saved as FB2");
-                    Process.Start(".");
-
-                    if (!Settings.Default.NeededFormats.IsNullOrWhiteSpace())
-                    {
-                        logger.Info("Converting to needed formats: " + Settings.Default.NeededFormats);
-
-                        Calibre.Convert("out.fb2", Settings.Default.NeededFormats.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
-
-                        logger.Info("Converted to all needed formats");
-                    }
-
-                    if (Settings.Default.MarkAsRead)
-                    {
-                        logger.Info("Marking downloaded and saved items as read at Google Reader");
-                        GoogleReader.MarkAsRead(entries);
-                        logger.Info("Marked all entries as read");
-                    }
-                }
-                catch (GoogleReaderException ex)
-                {
-                    logger.ErrorException(ex.Message, ex);
-                }
-
-                logger.Info("----------");
-
-                SetWait(false);
-            }).Start();*/
+        private void GoogleCredentialChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            //Settings.Default.GoogleUser = googleUserTexbox.Text;
+            //Settings.Default.GooglePassword = googlePasswordTexbox.Text;
         }
     }
 }

@@ -131,21 +131,56 @@
       <HintPath>..\..\Documents\Microsoft Visual Studio Async CTP\Samples\AsyncCtpLibrary.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL" />
-    <Reference Include="PresentationFramework.Aero" />
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Web.Services" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
+    <Reference Include="PresentationFramework.Aero">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RibbonControlsLibrary, Version=4.0.0.11019, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft Ribbon for WPF\V4.0\RibbonControlsLibrary.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.ServiceModel">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Web.Services">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xaml">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="WindowsBase">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -159,6 +194,9 @@
     <Compile Include="ContentProcess\HtmlUtils.cs" />
     <Compile Include="NLogTarget.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="UI\RibbonPasswordTextBox.xaml.cs">
+      <DependentUpon>RibbonPasswordTextBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -174,6 +212,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UI\RibbonPasswordTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -201,6 +243,29 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <Resource Include="Images\16\accept.png" />
+    <Resource Include="Images\16\amazon.png" />
+    <Resource Include="Images\16\cancel.png" />
+    <Resource Include="Images\16\email_go.png" />
+    <Resource Include="Images\16\feed.png" />
+    <Resource Include="Images\16\feed_add.png" />
+    <Resource Include="Images\16\feed_delete.png" />
+    <Resource Include="Images\16\feed_disk.png" />
+    <Resource Include="Images\16\feed_edit.png" />
+    <Resource Include="Images\16\feed_error.png" />
+    <Resource Include="Images\16\feed_key.png" />
+    <Resource Include="Images\16\feed_magnify.png" />
+    <Resource Include="Images\16\google.png" />
+    <Resource Include="Images\16\newspaper.png" />
+    <Resource Include="Images\16\newspaper_go.png" />
+    <Resource Include="Images\16\settings.png" />
+    <Resource Include="Images\32\question.png" />
+    <Resource Include="Images\32\books.png" />
+    <Resource Include="Images\16\books.png" />
+    <Resource Include="Images\32\document_layout.png" />
+    <Resource Include="Images\16\document_layout.png" />
+    <Resource Include="Images\32\images.png" />
+    <Resource Include="Images\16\images.png" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -213,15 +278,16 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\feed.png" />
+    <Resource Include="Images\32\feed.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\16\application_lightning.png" />
     <Content Include="Resources\cover.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Resource Include="Resources\newspaper.png" />
-    <Resource Include="Resources\newspaper_go.png" />
-    <Resource Include="Resources\question_16.png" />
+    <Resource Include="Images\32\newspaper.png" />
+    <Resource Include="Images\32\newspaper_go.png" />
+    <Resource Include="Images\16\question.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GoogleAPI\GoogleApi.csproj">
@@ -232,39 +298,35 @@
       <Project>{499C0FA8-9B6C-4590-926B-FF5061AE6C18}</Project>
       <Name>HtmlParserMajestic</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Utilities\Utilities.csproj">
-      <Project>{4E4A7BD0-821F-44E2-8842-BC49CDDA0D73}</Project>
-      <Name>Utilities</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\email_go.png" />
-    <Resource Include="Resources\settings.png" />
-    <Resource Include="Resources\feed_go_16.png" />
-    <Resource Include="Resources\feed_add.png" />
-    <Resource Include="Resources\feed_delete.png" />
-    <Resource Include="Resources\feed_disk.png" />
-    <Resource Include="Resources\feed_edit.png" />
-    <Resource Include="Resources\feed_error.png" />
-    <Resource Include="Resources\feed_go.png" />
-    <Resource Include="Resources\feed_key.png" />
-    <Resource Include="Resources\feed_magnify.png" />
-    <Resource Include="Resources\google.png" />
+    <Resource Include="Images\32\email_go.png" />
+    <Resource Include="Images\32\settings.png" />
+    <Resource Include="Images\16\feed_go.png" />
+    <Resource Include="Images\32\feed_add.png" />
+    <Resource Include="Images\32\feed_delete.png" />
+    <Resource Include="Images\32\feed_disk.png" />
+    <Resource Include="Images\32\feed_edit.png" />
+    <Resource Include="Images\32\feed_error.png" />
+    <Resource Include="Images\32\feed_go.png" />
+    <Resource Include="Images\32\feed_key.png" />
+    <Resource Include="Images\32\feed_magnify.png" />
+    <Resource Include="Images\32\google.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\amazon.png" />
+    <Resource Include="Images\32\amazon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\accept.png" />
+    <Resource Include="Images\32\accept.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\cancel.png" />
+    <Resource Include="Images\32\cancel.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\google_go.png" />
+    <Resource Include="Images\32\google_go.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

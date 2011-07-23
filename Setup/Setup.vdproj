@@ -286,7 +286,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:HtmlParserMajestic, Version=3.1.4.32531, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:HtmlParserMajestic, Version=3.1.4.33307, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_3D43275B2E21125098BFB2B2307D49EA"
@@ -348,7 +348,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GoogleApi, Version=0.1.4218.32530, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:GoogleApi, Version=0.1.4218.33307, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_7FBBDF3B5F3C1CBD50F655B05558D2A8"
@@ -463,7 +463,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:e2Kindle"
         "ProductCode" = "8:{2209F94D-0734-4C59-91AA-8B86E4A49E97}"
-        "PackageCode" = "8:{EB1D75D3-B6EF-419A-8ED8-CC6CC58ADC92}"
+        "PackageCode" = "8:{DC2E03D7-A7A1-4E19-843C-655798995441}"
         "UpgradeCode" = "8:{A6EE41E2-5462-462C-AA6D-5B256AF4B9C5}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

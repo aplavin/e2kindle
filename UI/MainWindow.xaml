@@ -1,19 +1,134 @@
-﻿<Window x:Class="e2Kindle.UI.MainWindow"
+﻿<ribbon:RibbonWindow x:Class="e2Kindle.UI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"        
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ribbon="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="MainWindow" Icon="/Resources/Icon.ico"
+        Title="e2Kindle" Icon="/Resources/Icon.ico"
         Loaded="WindowLoaded"
         Closing="WindowClosing"
-        Height="510" Width="697"
-        MinHeight="350" MinWidth="230">
+        Height="Auto" Width="697"
+        MinHeight="350" MinWidth="350" 
+        mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                     xmlns:Properties="clr-namespace:e2Kindle.Properties"
+                     d:DesignHeight="362" SizeToContent="Height">
+
+    <ribbon:RibbonWindow.Resources>
+        <Properties:Settings x:Key="Settings"/>
+    </ribbon:RibbonWindow.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ListView HorizontalAlignment="Stretch" Margin="12,61,12,6" Name="listView" VerticalAlignment="Stretch" ItemsSource="{Binding Path=Feeds}" SelectionMode="Extended">
+        <ribbon:Ribbon x:Name="ribbon" Grid.Row="0">
+            <ribbon:Ribbon.ApplicationMenu>
+                <ribbon:RibbonApplicationMenu Width="0" />
+            </ribbon:Ribbon.ApplicationMenu>
+
+            <ribbon:RibbonTab Header="Feeds">
+                <ribbon:RibbonGroup Header="Processing">
+                    <ribbon:RibbonButton LargeImageSource="/Images/32/google_go.png" 
+                                         Label="Load feeds"
+                                         ToolTipTitle="Load feeds"
+                                         ToolTipDescription="Download list of subscribed feeds from your Google Reader account."
+                                         ToolTipFooterDescription="To specify your account, go to the Settings tab."/>
+                    <ribbon:RibbonButton LargeImageSource="/Images/32/newspaper_go.png"
+                                         Label="Make book from selected"
+                                         ToolTipTitle="Make book from selected"
+                                         ToolTipDescription="Download all unread entries from selected feeds (with their full content, if possible) and make a book of them."
+                                         ToolTipFooterDescription="To get list of feeds from your Google Reader account, click Load Feeds.
+                                         To specify formats in which you want the book, go to the Settings tab."/>
+                    <ribbon:RibbonButton LargeImageSource="/Images/32/email_go.png" 
+                                         Label="E-mail selected"
+                                         ToolTipTitle="E-mail selected"
+                                         ToolTipDescription="NOT IMPLEMENTED"/>
+                </ribbon:RibbonGroup>
+                
+                <ribbon:RibbonGroup Header="Options">
+                    <ribbon:RibbonCheckBox LargeImageSource="/Images/32/document_layout.png"
+                                           Label="Download full articles"
+                                           ToolTipTitle="Download full articles"
+                                           ToolTipDescription="If checked then e2Kindle downloads page from URL in feed entry, reformats it for better view and adds to the resulting book instead of short feed entry content."
+                                           ToolTipFooterTitle="Note"
+                                           ToolTipFooterDescription="Now this function is supported only for pre-defined web-sites."/>
+                </ribbon:RibbonGroup>
+            </ribbon:RibbonTab>
+
+            <ribbon:RibbonTab Header="Files">
+                <ribbon:RibbonGroup>
+                </ribbon:RibbonGroup>
+            </ribbon:RibbonTab>
+
+            <ribbon:RibbonTab Header="Settings" DataContext="{StaticResource Settings}">
+                <ribbon:RibbonGroup Header="Application">
+                    <ribbon:RibbonMenuButton LargeImageSource="/Images/32/books.png"
+                                             Label="Book formats"
+                                             ToolTipTitle="Book formats"
+                                             ToolTipDescription="Here you can specify formats which you want the book to be converted to."
+                                             ToolTipFooterTitle="Note"
+                                             ToolTipFooterDescription="Conversion is performed using Calibre appicalion, so it must be installed if you need formats other than FB2.">
+                        <ribbon:RibbonGallery ColumnsStretchToFill="True" MinColumnCount="3">
+                            <ribbon:RibbonGalleryCategory Header="Default">
+                                <CheckBox Content="FB2" IsEnabled="False" IsChecked="True"/>
+                            </ribbon:RibbonGalleryCategory>
+                            <ribbon:RibbonGalleryCategory Header="Common">
+                                <CheckBox Content="MOBI" IsChecked="True"/>
+                                <CheckBox Content="EPUB" IsChecked="False"/>
+                                <CheckBox Content="PDF" IsChecked="False"/>
+                            </ribbon:RibbonGalleryCategory>
+                            <ribbon:RibbonGalleryCategory Header="Other">
+                                <CheckBox Content="LIT" IsChecked="False"/>
+                                <CheckBox Content="LRF" IsChecked="False"/>
+                                <CheckBox Content="OEB" IsChecked="False"/>
+                                <CheckBox Content="PDB" IsChecked="False"/>
+                                <CheckBox Content="PML" IsChecked="False"/>
+                                <CheckBox Content="RB" IsChecked="False"/>
+                                <CheckBox Content="RTF" IsChecked="False"/>
+                                <CheckBox Content="TCR" IsChecked="False"/>
+                                <CheckBox Content="TXT" IsChecked="False"/>
+                                <CheckBox Content="TXTZ" IsChecked="False"/>
+                                <CheckBox Content="HTML" IsChecked="False"/>
+                                <CheckBox Content="HTMLZ" IsChecked="False"/>
+                                <CheckBox Content="SNB" IsChecked="False"/>
+                            </ribbon:RibbonGalleryCategory>
+                        </ribbon:RibbonGallery>
+                    </ribbon:RibbonMenuButton>
+                    <ribbon:RibbonCheckBox LargeImageSource="/Images/32/images.png"
+                                           Label="Download images"
+                                           ToolTipTitle="Download images"
+                                           ToolTipDescription="If checked then images are downloaded and added to the resulting book."
+                                           ToolTipFooterTitle="Note"
+                                           ToolTipFooterDescription="This consumes additional traffic and time. For web pages with heavy graphics difference can be huge."/>
+                </ribbon:RibbonGroup>
+
+                <ribbon:RibbonGroup Header="Google">
+                    <ribbon:RibbonTextBox Label="Username"
+                                          ToolTipTitle="Google username"
+                                          ToolTipDescription="Your Google account username, with or without &quot;@gmail.com&quot; at the end."
+                                          Text="{Binding Path=Default.GoogleUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <ribbon:RibbonTextBox Label="Password " 
+                                          ToolTipTitle="Google password"
+                                          ToolTipDescription="Your Google password."
+                                          ToolTipFooterTitle="Security tip"
+                                          ToolTipFooterDescription="For your account security enter here a separate application-specific password."
+                                          Text="{Binding Path=Default.GooglePassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </ribbon:RibbonGroup>
+
+                <ribbon:RibbonGroup Header="Kindle">
+                    <ribbon:RibbonTextBox Label="E-mail"
+                                          ToolTipTitle="Kindle e-mail"
+                                          ToolTipDescription="Your Amazon Kindle e-mail address. It ends with &quot;@kindle.com&quot; or &quot;@free.kindle.com&quot;.
+                                          Of course, you can enter any e-mail address here, if you want to send created books to it."
+                                          ToolTipFooterTitle="NOT IMPLEMENTED"
+                                          Text="{Binding Path=Default.KindleEmail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </ribbon:RibbonGroup>
+            </ribbon:RibbonTab>
+        </ribbon:Ribbon>
+
+        <ListView  Grid.Row="1" HorizontalAlignment="Stretch" Margin="12,6,12,6" Name="listView" VerticalAlignment="Stretch" ItemsSource="{Binding Path=Feeds}" SelectionMode="Extended">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="ToolTip" Value="{Binding Path=Url}" />
@@ -34,20 +149,7 @@
             </ListView.View>
         </ListView>
 
-        <ToolBar Name="toolbar" Margin="12,12,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <Button Click="LoadFeedsClick" ToolTip="Load feeds from Google Reader.">
-                <Image Source="/Resources/google_go.png" Stretch="None" />
-            </Button>
-            <Button Click="SettingsClick">
-                <Image Source="/Resources/settings.png" Stretch="None" />
-            </Button>
-            <Button Click="SendClick" ToolTip="Process unread items in selected feeds: send them to Kindle or just save.">
-                <Image Source="/Resources/newspaper_go.png" Stretch="None" />
-            </Button>
-        </ToolBar>
-
-        <RichTextBox Grid.Row="1" Height="150" HorizontalAlignment="Stretch" Margin="12,20,12,12" Name="richTextBox" VerticalAlignment="Bottom" IsReadOnly="True" VerticalScrollBarVisibility="Auto" FontWeight="Bold" />
-
-        <ProgressBar Grid.Row="1" Height="20" HorizontalAlignment="Stretch" Margin="12,0,12,0" Name="progressBar" VerticalAlignment="Top" />
+        <RichTextBox Grid.Row="2" Height="90" HorizontalAlignment="Stretch" Margin="12,20,12,12" Name="richTextBox" VerticalAlignment="Bottom" IsReadOnly="True" VerticalScrollBarVisibility="Auto" FontWeight="Bold" />
+        <ProgressBar Grid.Row="2" Height="20" HorizontalAlignment="Stretch" Margin="12,0,12,0" Name="progressBar" VerticalAlignment="Top" />
     </Grid>
-</Window>
+</ribbon:RibbonWindow>
