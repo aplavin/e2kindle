@@ -1,6 +1,8 @@
 ﻿namespace e2Kindle.UI
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Drawing;
@@ -9,6 +11,7 @@
     using System.Reflection;
     using System.Threading.Tasks;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Documents;
     using System.Windows.Input;
 
@@ -27,7 +30,7 @@
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static MainWindow instance;
-        private SettingsWindow settingsWindow;
+        private readonly HashSet<string> formats = new HashSet<string>();
 
         // For WPF binding.
         public ObservableCollection<Feed> Feeds { get; private set; }
@@ -37,6 +40,29 @@
             this.Feeds = new ObservableCollection<Feed>();
             InitializeComponent();
             instance = this;
+
+            Dictionary<string, string[]> formatsDic = new Dictionary<string, string[]>
+                {
+                    {"Default", new []{"FB2"}},
+                    {"Common", new []{"MOBI", "EPUB", "PDF"}},
+                    {"Other", new []{"LIT", "LRF", "OEB", "PDB", "PML", "RB", "RTF", "TCR", "TXT", "TXTZ", "HTML", "HTMLZ", "SNB" }},
+                };
+
+            foreach (var group in formatsDic)
+            {
+                var galleryCategory = new RibbonGalleryCategory { Header = group.Key };
+                foreach (var format in group.Value)
+                {
+                    var checkbox = new CheckBox { Content = format, IsEnabled = format != "FB2", IsChecked = format.IsOneOf("FB2", "MOBI") };
+
+                    string formatLocal = format;
+                    checkbox.Checked += (s, e) => formats.Add(formatLocal.ToLower());
+                    checkbox.Unchecked += (s, e) => formats.Remove(formatLocal.ToLower());
+
+                    galleryCategory.Items.Add(checkbox);
+                }
+                formatsGallery.Items.Add(galleryCategory);
+            }
         }
 
         /// <summary>
@@ -63,15 +89,7 @@
         private void SetWait(bool wait)
         {
             Cursor = wait ? Cursors.Wait : Cursors.Arrow;
-            //toolbar.IsEnabled = !wait;
-        }
-
-        private void SettingsClick(object sender, RoutedEventArgs e)
-        {
-            if (this.settingsWindow == null)
-                this.settingsWindow = new SettingsWindow();
-
-            this.settingsWindow.ShowDialog();
+            ribbon.IsEnabled = !wait;
         }
 
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -92,8 +110,6 @@
                 Height = Settings.Default.WindowRectangle.Height;
             }
 
-            GoogleReader.SetCredentials(Settings.Default.GoogleUser, Settings.Default.GooglePassword);
-
             logger.Info("e2Kindle {0} start", Assembly.GetExecutingAssembly().GetName().Version.ToString(2));
         }
 
@@ -109,6 +125,8 @@
 
             try
             {
+                GoogleReader.SetCredentials(Settings.Default.GoogleUser, Settings.Default.GooglePassword);
+
                 Feeds.AddRange(await TaskEx.Run(() => GoogleReader.GetFeeds().OrderByDescending(gf => gf.UnreadCount)));
 
                 listView.SelectedItems.Clear();
@@ -130,7 +148,7 @@
         }
 
         // NOTE: C# 5.0 feature used: async/await
-        private async void SendClick(object sender, RoutedEventArgs e)
+        private async void CreateBookClick(object sender, RoutedEventArgs e)
         {
             if (listView.SelectedItems.Empty())
             {
@@ -146,6 +164,8 @@
 
             try
             {
+                GoogleReader.SetCredentials(Settings.Default.GoogleUser, Settings.Default.GooglePassword);
+
                 var entries = (await TaskEx.Run(() => GoogleReader.GetEntries(feeds))).
                     Flatten().
                     ToArray();
@@ -156,19 +176,24 @@
                         () => ContentProcess.CreateFb2(
                             writer,
                             entries,
-                            (v, m) => logger.Info("Processed {0}/{1}", v, m))); // TODO: progress bar
+                            (v, m) => Dispatcher.Invoke(new Action(() =>
+                            {
+                                progressBar.Maximum = m;
+                                progressBar.Value = v;
+                            }), null)));
                 }
 
                 logger.Info("Feeds are downloaded and saved as FB2");
 
-                if (XmlUtils.CheckValid("out.fb2")) logger.Info("FB2 file is valid as XML");
+                if (XmlUtils.CheckValidFile("out.fb2")) logger.Info("FB2 file is valid as XML");
                 else logger.Warn("FB2 file isn't valid as XML");
 
                 Process.Start(".");
 
-                if (!Settings.Default.NeededFormats.IsNullOrWhiteSpace())
+
+                if (formats.Any())
                 {
-                    foreach (string format in Settings.Default.NeededFormats.Split(' ').WhereNot(StringUtils.IsEmpty))
+                    foreach (string format in formats)
                     {
                         logger.Info("Converting to {0}", format);
                         string tFormat = format;
@@ -201,12 +226,6 @@
             logger.Info("----------");
 
             SetWait(false);
-        }
-
-        private void GoogleCredentialChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-            //Settings.Default.GoogleUser = googleUserTexbox.Text;
-            //Settings.Default.GooglePassword = googlePasswordTexbox.Text;
         }
     }
 }

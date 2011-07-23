@@ -127,7 +127,9 @@
             if (binaries == null) throw new ArgumentNullException("binaries");
 
             // process images in html
-            var images = ProcessHtmlImages(ref content);
+            var images = Settings.Default.DownloadImages ? 
+                ProcessHtmlImages(ref content) :
+                Enumerable.Empty<KeyValuePair<string, byte[]>>();
 
             // and add them to binaries list
             binaries.AddRange(images);
@@ -189,7 +191,7 @@
             int cnt = 0;
             callback(cnt, feedEntries.Count());
 
-            var entries = feedEntries.//AsParallel().
+            var entries = feedEntries.AsParallel().
                 Select(e =>
                 {
                     string content = e.Content;

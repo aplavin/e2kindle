@@ -30,12 +30,14 @@
 
             <ribbon:RibbonTab Header="Feeds">
                 <ribbon:RibbonGroup Header="Processing">
-                    <ribbon:RibbonButton LargeImageSource="/Images/32/google_go.png" 
+                    <ribbon:RibbonButton Click="LoadFeedsClick"
+                                         LargeImageSource="/Images/32/google_go.png" 
                                          Label="Load feeds"
                                          ToolTipTitle="Load feeds"
                                          ToolTipDescription="Download list of subscribed feeds from your Google Reader account."
                                          ToolTipFooterDescription="To specify your account, go to the Settings tab."/>
-                    <ribbon:RibbonButton LargeImageSource="/Images/32/newspaper_go.png"
+                    <ribbon:RibbonButton Click="CreateBookClick" 
+                                         LargeImageSource="/Images/32/newspaper_go.png"
                                          Label="Make book from selected"
                                          ToolTipTitle="Make book from selected"
                                          ToolTipDescription="Download all unread entries from selected feeds (with their full content, if possible) and make a book of them."
@@ -46,14 +48,22 @@
                                          ToolTipTitle="E-mail selected"
                                          ToolTipDescription="NOT IMPLEMENTED"/>
                 </ribbon:RibbonGroup>
-                
-                <ribbon:RibbonGroup Header="Options">
-                    <ribbon:RibbonCheckBox LargeImageSource="/Images/32/document_layout.png"
+
+                <ribbon:RibbonGroup Header="Options" DataContext="{StaticResource Settings}">
+                    <ribbon:RibbonCheckBox IsChecked="{Binding Path=Default.LoadFullContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                           LargeImageSource="/Images/32/document_layout.png"
                                            Label="Download full articles"
                                            ToolTipTitle="Download full articles"
                                            ToolTipDescription="If checked then e2Kindle downloads page from URL in feed entry, reformats it for better view and adds to the resulting book instead of short feed entry content."
                                            ToolTipFooterTitle="Note"
                                            ToolTipFooterDescription="Now this function is supported only for pre-defined web-sites."/>
+                    <ribbon:RibbonCheckBox IsChecked="{Binding Path=Default.MarkAsRead, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                           LargeImageSource="/Images/32/document_prepare.png"
+                                           Label="Mark as read"
+                                           ToolTipTitle="Mark downloaded entries as read"
+                                           ToolTipDescription="If checked then after successful download and saving entries as a book they are marked as read at Google Reader."
+                                           ToolTipFooterTitle="Note"
+                                           ToolTipFooterDescription="It can take noticeable amount of time if you have many unread items, because they are marked separately."/>
                 </ribbon:RibbonGroup>
             </ribbon:RibbonTab>
 
@@ -70,33 +80,10 @@
                                              ToolTipDescription="Here you can specify formats which you want the book to be converted to."
                                              ToolTipFooterTitle="Note"
                                              ToolTipFooterDescription="Conversion is performed using Calibre appicalion, so it must be installed if you need formats other than FB2.">
-                        <ribbon:RibbonGallery ColumnsStretchToFill="True" MinColumnCount="3">
-                            <ribbon:RibbonGalleryCategory Header="Default">
-                                <CheckBox Content="FB2" IsEnabled="False" IsChecked="True"/>
-                            </ribbon:RibbonGalleryCategory>
-                            <ribbon:RibbonGalleryCategory Header="Common">
-                                <CheckBox Content="MOBI" IsChecked="True"/>
-                                <CheckBox Content="EPUB" IsChecked="False"/>
-                                <CheckBox Content="PDF" IsChecked="False"/>
-                            </ribbon:RibbonGalleryCategory>
-                            <ribbon:RibbonGalleryCategory Header="Other">
-                                <CheckBox Content="LIT" IsChecked="False"/>
-                                <CheckBox Content="LRF" IsChecked="False"/>
-                                <CheckBox Content="OEB" IsChecked="False"/>
-                                <CheckBox Content="PDB" IsChecked="False"/>
-                                <CheckBox Content="PML" IsChecked="False"/>
-                                <CheckBox Content="RB" IsChecked="False"/>
-                                <CheckBox Content="RTF" IsChecked="False"/>
-                                <CheckBox Content="TCR" IsChecked="False"/>
-                                <CheckBox Content="TXT" IsChecked="False"/>
-                                <CheckBox Content="TXTZ" IsChecked="False"/>
-                                <CheckBox Content="HTML" IsChecked="False"/>
-                                <CheckBox Content="HTMLZ" IsChecked="False"/>
-                                <CheckBox Content="SNB" IsChecked="False"/>
-                            </ribbon:RibbonGalleryCategory>
-                        </ribbon:RibbonGallery>
+                        <ribbon:RibbonGallery x:Name="formatsGallery" ColumnsStretchToFill="True" MinColumnCount="3" />
                     </ribbon:RibbonMenuButton>
-                    <ribbon:RibbonCheckBox LargeImageSource="/Images/32/images.png"
+                    <ribbon:RibbonCheckBox IsChecked="{Binding Path=Default.DownloadImages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                           LargeImageSource="/Images/32/images.png"
                                            Label="Download images"
                                            ToolTipTitle="Download images"
                                            ToolTipDescription="If checked then images are downloaded and added to the resulting book."
@@ -109,7 +96,7 @@
                                           ToolTipTitle="Google username"
                                           ToolTipDescription="Your Google account username, with or without &quot;@gmail.com&quot; at the end."
                                           Text="{Binding Path=Default.GoogleUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                        <ribbon:RibbonTextBox Label="Password " 
+                    <ribbon:RibbonTextBox Label="Password " 
                                           ToolTipTitle="Google password"
                                           ToolTipDescription="Your Google password."
                                           ToolTipFooterTitle="Security tip"

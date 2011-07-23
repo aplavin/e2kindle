@@ -4,7 +4,7 @@
   <description asmv2:iconFile="Resources\Icon.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="e2Kindle" version="0.2.4220.29535" language="neutral" processorArchitecture="msil" />
+    <assemblyIdentity name="e2Kindle" version="0.2.4221.31292" language="neutral" processorArchitecture="msil" />
     <commandLine file="e2Kindle.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -55,38 +55,38 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="e2Kindle.exe" size="113664">
-      <assemblyIdentity name="e2Kindle" version="0.2.4220.29535" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="e2Kindle.exe" size="127488">
+      <assemblyIdentity name="e2Kindle" version="0.2.4221.31292" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>2jQmpv1JQlcbz2OHw8EjC1izAGU=</dsig:DigestValue>
+        <dsig:DigestValue>ILW2d2MBXflz53wOoE+Bv9QHIv4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="GoogleApi.dll" size="22528">
-      <assemblyIdentity name="GoogleApi" version="0.1.4220.26048" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="GoogleApi" version="0.1.4221.30859" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>7/8VRJqS8WbgE5JEltCihYuiGJU=</dsig:DigestValue>
+        <dsig:DigestValue>RX5oVLVeYcUnu1OqHQGR+zJikiE=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="HtmlParserMajestic.dll" size="44544">
-      <assemblyIdentity name="HtmlParserMajestic" version="3.1.4.26048" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="HtmlParserMajestic" version="3.1.4.30859" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>ZvbrxGBGH8ec8uNNU6P64DMSNtc=</dsig:DigestValue>
+        <dsig:DigestValue>PVG6aZCbBccpWlD2+oi3sVw3h+Q=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -139,24 +139,24 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Utilities.dll" size="31232">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Utilities.dll" size="36864">
       <assemblyIdentity name="Utilities" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>McqjHAI9DwYzv7OVJuP5ElCwAXw=</dsig:DigestValue>
+        <dsig:DigestValue>Je57THFeN19SxDxggAqUeB+7e9M=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="e2Kindle.exe.config" size="1715">
+  <file name="e2Kindle.exe.config" size="1712">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>Be8iF/E+WNYXVMAOmY84eXtlsUo=</dsig:DigestValue>
+      <dsig:DigestValue>olrP3GU62KyNuZYuLXGUeZaQpVM=</dsig:DigestValue>
     </hash>
   </file>
   <file name="NLog.config" size="731">

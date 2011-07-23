@@ -197,9 +197,6 @@
     <Compile Include="UI\RibbonPasswordTextBox.xaml.cs">
       <DependentUpon>RibbonPasswordTextBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\SettingsWindow.xaml.cs">
-      <DependentUpon>SettingsWindow.xaml</DependentUpon>
-    </Compile>
     <Page Include="UI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -213,10 +210,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="UI\RibbonPasswordTextBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -266,6 +259,8 @@
     <Resource Include="Images\16\document_layout.png" />
     <Resource Include="Images\32\images.png" />
     <Resource Include="Images\16\images.png" />
+    <Resource Include="Images\32\document_prepare.png" />
+    <Resource Include="Images\16\document_prepare.png" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -297,6 +292,10 @@
     <ProjectReference Include="..\HtmlParserMajestic\HtmlParserMajestic.csproj">
       <Project>{499C0FA8-9B6C-4590-926B-FF5061AE6C18}</Project>
       <Name>HtmlParserMajestic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities\Utilities.csproj">
+      <Project>{240E5097-8D5C-4532-9BE2-D4D0F123FB52}</Project>
+      <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
