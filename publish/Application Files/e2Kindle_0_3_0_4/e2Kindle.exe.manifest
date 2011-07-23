@@ -4,7 +4,7 @@
   <description asmv2:iconFile="Resources\Icon.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="e2Kindle" version="0.3.4221.32539" language="neutral" processorArchitecture="msil" />
+    <assemblyIdentity name="e2Kindle" version="0.3.4221.32973" language="neutral" processorArchitecture="msil" />
     <commandLine file="e2Kindle.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -56,37 +56,37 @@
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="e2Kindle.exe" size="128000">
-      <assemblyIdentity name="e2Kindle" version="0.3.4221.32539" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="e2Kindle" version="0.3.4221.32973" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>K/YpLYQcyYO2uwr4+TMxOCGFe1o=</dsig:DigestValue>
+        <dsig:DigestValue>uNxQeI52EJv4ZQpiC4Hvy/VkKgo=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="GoogleApi.dll" size="22528">
-      <assemblyIdentity name="GoogleApi" version="0.1.4221.31672" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="GoogleApi" version="0.1.4221.32944" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>PvuPjTFCFrfPOaFQqskYJQuG3Ng=</dsig:DigestValue>
+        <dsig:DigestValue>Vsn3FVXTDoUpwKN8PkGc2IdLLkA=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="HtmlParserMajestic.dll" size="44544">
-      <assemblyIdentity name="HtmlParserMajestic" version="3.1.4.31672" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="HtmlParserMajestic" version="3.1.4.32945" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>xhxjYuoB59IzRyBYwEcKT6mM6vI=</dsig:DigestValue>
+        <dsig:DigestValue>Gf8Nk8oU5QQB0bjKCzzopiH4bTU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -146,7 +146,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>yd6UVVDWxaqC3kLkyX0c7gxhVyI=</dsig:DigestValue>
+        <dsig:DigestValue>ROjslVwd7LKDoOSDQcSxOR8hrls=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

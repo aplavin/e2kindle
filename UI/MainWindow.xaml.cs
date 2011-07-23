@@ -47,6 +47,7 @@
                     {"Common", new []{"MOBI", "EPUB", "PDF"}},
                     {"Other", new []{"LIT", "LRF", "OEB", "PDB", "PML", "RB", "RTF", "TCR", "TXT", "TXTZ", "HTML", "HTMLZ", "SNB" }},
                 };
+            formats.Add("mobi");
 
             foreach (var group in formatsDic)
             {
