@@ -8,7 +8,7 @@
         <expiration maximumAge="0" unit="days" />
       </update>
     </subscription>
-    <deploymentProvider codebase="http://code.google.com/p/e2kindle/e2Kindle.application" />
+    <deploymentProvider codebase="http://e2kindle.googlecode.com/hg/publish/e2Kindle.application" />
   </deployment>
   <compatibleFrameworks xmlns="urn:schemas-microsoft-com:clickonce.v2">
     <framework targetVersion="4.0" profile="Client" supportedRuntime="4.0.30319" />
@@ -22,7 +22,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>kSCNeRMYsdGge6dpVp6BOomUI4g=</dsig:DigestValue>
+        <dsig:DigestValue>1AOerONAIAuxwDcMi7LkeR+F1rM=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

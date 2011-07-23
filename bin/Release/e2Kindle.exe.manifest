@@ -4,7 +4,7 @@
   <description asmv2:iconFile="Resources\Icon.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="e2Kindle" version="0.3.4221.32137" language="neutral" processorArchitecture="msil" />
+    <assemblyIdentity name="e2Kindle" version="0.3.4221.32539" language="neutral" processorArchitecture="msil" />
     <commandLine file="e2Kindle.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -56,13 +56,13 @@
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="e2Kindle.exe" size="128000">
-      <assemblyIdentity name="e2Kindle" version="0.3.4221.32137" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="e2Kindle" version="0.3.4221.32539" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>vn8lUPwJdSq6gMEnukhwCt1Qj3M=</dsig:DigestValue>
+        <dsig:DigestValue>K/YpLYQcyYO2uwr4+TMxOCGFe1o=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
