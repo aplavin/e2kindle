@@ -270,6 +270,7 @@
     <Resource Include="Images\16\images.png" />
     <Resource Include="Images\32\document_prepare.png" />
     <Resource Include="Images\16\document_prepare.png" />
+    <Resource Include="Images\32\folder_link.png" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>

@@ -231,5 +231,10 @@
 
             logger.Info("----------");
         }
+
+        private void OpenFolderClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start(".");
+        }
     }
 }

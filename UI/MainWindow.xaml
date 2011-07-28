@@ -25,7 +25,11 @@
 
         <ribbon:Ribbon x:Name="ribbon" Grid.Row="0">
             <ribbon:Ribbon.ApplicationMenu>
-                <ribbon:RibbonApplicationMenu Width="0" />
+                <ribbon:RibbonApplicationMenu>
+                    <ribbon:RibbonApplicationMenuItem Header="Open folder"
+                                                      Click="OpenFolderClick"
+                                                      ImageSource="/Images/32/folder_link.png"/>
+                </ribbon:RibbonApplicationMenu>
             </ribbon:Ribbon.ApplicationMenu>
 
             <ribbon:RibbonTab Header="Feeds">
