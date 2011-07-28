@@ -1,75 +1,75 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Symbols xmlns="http://schemas.postsharp.org/2.0/symbols">
   <Class Class="#1=T:e2Kindle.Aspects.OnWorkerThreadAttribute">
-    <Instance Declaration="#2=M:e2Kindle.UI.Dialogs::ShowException(System.Exception, System.String, System.String)" Id="66361c0028942530">
+    <Instance Declaration="#2=M:e2Kindle.UI.Dialogs::ShowException(System.Exception, System.String, System.String)" Id="66361c0086581f13">
       <Target>
         <JoinPoint Description="#3=Intercepted by OnInvoke" />
       </Target>
     </Instance>
   </Class>
   <Class Class="#4=T:e2Kindle.Aspects.OnGuiThreadAttribute">
-    <Instance Declaration="#5=M:e2Kindle.UI.MainWindow::FeedsClear()" Id="66361c0026fc61ab">
+    <Instance Declaration="#5=M:e2Kindle.UI.MainWindow::FeedsClear()" Id="66361c0021de680b">
       <Target>
         <JoinPoint Description="#3" />
       </Target>
     </Instance>
-    <Instance Declaration="#6=M:e2Kindle.UI.MainWindow::FeedsAdd(GoogleAPI.GoogleReader.Feed)" Id="66361c00fcfdcade">
+    <Instance Declaration="#6=M:e2Kindle.UI.MainWindow::FeedsAdd(GoogleAPI.GoogleReader.Feed)" Id="66361c00af508d36">
       <Target>
         <JoinPoint Description="#3" />
       </Target>
     </Instance>
-    <Instance Declaration="#7=M:e2Kindle.UI.MainWindow::FeedsAddRange(System.Collections.Generic.IEnumerable{GoogleAPI.GoogleReader.Feed})" Id="66361c0034723ce3">
+    <Instance Declaration="#7=M:e2Kindle.UI.MainWindow::FeedsAddRange(System.Collections.Generic.IEnumerable{GoogleAPI.GoogleReader.Feed})" Id="66361c00a9926dcf">
       <Target>
         <JoinPoint Description="#3" />
       </Target>
     </Instance>
-    <Instance Declaration="#8=M:e2Kindle.UI.MainWindow::FeedsSetSelected(System.Collections.Generic.IEnumerable{GoogleAPI.GoogleReader.Feed})" Id="66361c00b1115849">
+    <Instance Declaration="#8=M:e2Kindle.UI.MainWindow::FeedsSetSelected(System.Collections.Generic.IEnumerable{GoogleAPI.GoogleReader.Feed})" Id="66361c008732eb4a">
       <Target>
         <JoinPoint Description="#3" />
       </Target>
     </Instance>
-    <Instance Declaration="#9=M:e2Kindle.UI.MainWindow::FeedsGetSelected()" Id="66361c007d0f46bb">
+    <Instance Declaration="#9=M:e2Kindle.UI.MainWindow::FeedsGetSelected()" Id="66361c0027ab37c4">
       <Target>
         <JoinPoint Description="#3" />
       </Target>
     </Instance>
-    <Instance Declaration="#10=M:e2Kindle.UI.MainWindow::SetWaitInternal(System.Boolean)" Id="66361c00e0aa12f1">
+    <Instance Declaration="#10=M:e2Kindle.UI.MainWindow::SetWaitInternal(System.Boolean)" Id="66361c00e3e837f2">
       <Target>
         <JoinPoint Description="#3" />
       </Target>
     </Instance>
   </Class>
   <Class Class="#11=T:e2Kindle.Aspects.ExceptionDialogAttribute">
-    <Instance Declaration="#12=M:e2Kindle.UI.MainWindow::LoadFeeds()" Id="66361c00febc45d8">
+    <Instance Declaration="#12=M:e2Kindle.UI.MainWindow::LoadFeeds()" Id="66361c000a9132cf">
       <Target>
         <JoinPoint Description="#13=Wrapped by advice(s) OnException" Ordinal="7" />
       </Target>
     </Instance>
-    <Instance Declaration="#14=M:e2Kindle.UI.MainWindow::CreateBook(System.Action{System.Int32,System.String})" Id="66361c0014df5d93">
+    <Instance Declaration="#14=M:e2Kindle.UI.MainWindow::CreateBook(System.Action{System.Int32,System.String})" Id="66361c00f13065cc">
       <Target>
         <JoinPoint Description="#13" Ordinal="7" />
       </Target>
     </Instance>
   </Class>
   <Class Class="#15=T:e2Kindle.Aspects.ExceptionLogAttribute">
-    <Instance Declaration="#12" Id="66361c00702fe3d4">
+    <Instance Declaration="#12" Id="66361c005defeca0">
       <Target>
         <JoinPoint Description="#13" Ordinal="3" />
       </Target>
     </Instance>
-    <Instance Declaration="#14" Id="66361c0030feaff8">
+    <Instance Declaration="#14" Id="66361c00d463e2f4">
       <Target>
         <JoinPoint Description="#13" Ordinal="3" />
       </Target>
     </Instance>
   </Class>
   <Class Class="#16=T:e2Kindle.Aspects.UseSetWaitAttribute">
-    <Instance Declaration="#12" Id="66361c0083efb318">
+    <Instance Declaration="#12" Id="66361c00007a5ba5">
       <Target>
         <JoinPoint Description="#17=Wrapped by advice(s) OnEntry, OnExit" Ordinal="2" />
       </Target>
     </Instance>
-    <Instance Declaration="#14" Id="66361c00b576a45e">
+    <Instance Declaration="#14" Id="66361c005912d6f9">
       <Target>
         <JoinPoint Description="#17" Ordinal="2" />
       </Target>

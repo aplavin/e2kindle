@@ -121,6 +121,7 @@
         private void WindowClosing(object sender, CancelEventArgs e)
         {
             logger.Info("e2Kindle exit");
+            Settings.Default.Save();
         }
 
         private void LoadFeedsClick(object sender, RoutedEventArgs e)
