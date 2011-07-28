@@ -141,7 +141,7 @@
                                 FeedTitle = fe.Feed.Title,
                                 Title = fe.Title,
                                 Published = fe.Published,
-                                Content = HtmlToFb2("<p>" + content + "</p>", binaries)
+                                Content = HtmlToFb2(content, binaries)
                             };
                 })
                 .GroupBy(e => e.FeedTitle)
