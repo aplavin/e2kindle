@@ -111,8 +111,6 @@
         private void SetWaitInternal(bool wait)
         {
             Cursor = wait ? Cursors.Wait : Cursors.Arrow;
-            ribbon.IsEnabled = !wait;
-            listView.IsEnabled = !wait;
         }
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
