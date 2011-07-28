@@ -11,7 +11,8 @@
     <RootNamespace>e2Kindle</RootNamespace>
     <AssemblyName>e2Kindle</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -31,8 +32,8 @@
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>4</ApplicationRevision>
-    <ApplicationVersion>0.3.0.4</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>0.4.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -128,10 +129,11 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AsyncCtpLibrary">
-      <HintPath>..\..\Documents\Microsoft Visual Studio Async CTP\Samples\AsyncCtpLibrary.dll</HintPath>
-    </Reference>
     <Reference Include="NLog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL" />
+    <Reference Include="Ookii.Dialogs.Wpf">
+      <HintPath>..\Ookii.Dialogs\Ookii.Dialogs.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="PostSharp, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL" />
     <Reference Include="PresentationFramework.Aero">
       <Private>False</Private>
     </Reference>
@@ -188,13 +190,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Aspects\ExceptionDialogAttribute.cs" />
+    <Compile Include="Aspects\ExceptionLogAttribute.cs" />
+    <Compile Include="Aspects\OnGuiThreadAttribute.cs" />
+    <Compile Include="Aspects\OnWorkerThreadAttribute.cs" />
+    <Compile Include="Aspects\UseSetWaitAttribute.cs" />
     <Compile Include="ContentProcess\Calibre.cs" />
     <Compile Include="ContentProcess\ContentProcess.cs" />
+    <Compile Include="ContentProcess\Fb2Utils.cs" />
     <Compile Include="ContentProcess\FullContent.cs" />
     <Compile Include="ContentProcess\HabrContent.cs" />
     <Compile Include="ContentProcess\HtmlUtils.cs" />
-    <Compile Include="NLogTarget.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="UI\Dialogs.cs" />
     <Compile Include="UI\RibbonPasswordTextBox.xaml.cs">
       <DependentUpon>RibbonPasswordTextBox.xaml</DependentUpon>
     </Compile>
@@ -350,6 +358,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -85,18 +85,6 @@ namespace e2Kindle.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0, 0, 0, 0")]
-        public global::System.Drawing.Rectangle WindowRectangle {
-            get {
-                return ((global::System.Drawing.Rectangle)(this["WindowRectangle"]));
-            }
-            set {
-                this["WindowRectangle"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool DownloadImages {
             get {

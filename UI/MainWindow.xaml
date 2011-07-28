@@ -6,11 +6,11 @@
         Title="e2Kindle" Icon="/Resources/Icon.ico"
         Loaded="WindowLoaded"
         Closing="WindowClosing"
-        Height="Auto" Width="697"
+        Height="Auto" Width="700"
         MinHeight="350" MinWidth="350" 
         mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                     xmlns:Properties="clr-namespace:e2Kindle.Properties"
-                     d:DesignHeight="362" SizeToContent="Height">
+        xmlns:Properties="clr-namespace:e2Kindle.Properties"
+        d:DesignHeight="362" SizeToContent="Height">
 
     <ribbon:RibbonWindow.Resources>
         <Properties:Settings x:Key="Settings"/>
@@ -135,8 +135,5 @@
                 </GridView>
             </ListView.View>
         </ListView>
-
-        <RichTextBox Grid.Row="2" Height="90" HorizontalAlignment="Stretch" Margin="12,20,12,12" Name="richTextBox" VerticalAlignment="Bottom" IsReadOnly="True" VerticalScrollBarVisibility="Auto" FontWeight="Bold" />
-        <ProgressBar Grid.Row="2" Height="20" HorizontalAlignment="Stretch" Margin="12,0,12,0" Name="progressBar" VerticalAlignment="Top" />
     </Grid>
 </ribbon:RibbonWindow>

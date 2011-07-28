@@ -2,8 +2,8 @@ syntax: glob
 obj
 bin/Debug
 Setup/Debug
-log.log
 bin/*/app.publish
+*.orig
 syntax: regexp
 ReSharper
 StyleCop

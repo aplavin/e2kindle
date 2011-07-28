@@ -30,38 +30,22 @@
 
             try
             {
-                try
+                using (var process = Process.Start("ebook-convert", @"""{0}"" ""{1}""".FormatWith(inputFile, outputFile)))
                 {
-                    using (var process = Process.Start("ebook-convert", @"""{0}"" ""{1}""".FormatWith(inputFile, outputFile)))
-                    {
-                        process.WaitForExit();
+                    process.WaitForExit();
 
-                        if (process.ExitCode != 0)
-                        {
-                            throw new FileFormatException(
-                                "Format (extension) of input (*{0}) or output (*{1}) file isn't supported by Calibre.".
-                                FormatWith(Path.GetExtension(inputFile), Path.GetExtension(outputFile)));
-                        }
+                    if (process.ExitCode != 0)
+                    {
+                        throw new FileFormatException(
+                            "Format (extension) of input (*{0}) or output (*{1}) file isn't supported by Calibre.".
+                            FormatWith(Path.GetExtension(inputFile), Path.GetExtension(outputFile)));
                     }
                 }
-                catch (Win32Exception ex)
-                {
-                    throw new FileNotFoundException("Calibre isn't installed properly", "ebook-convert", ex);
-                }
             }
-            catch (Exception ex)
+            catch (Win32Exception ex)
             {
-                throw new Exception("Can't convert '{0}' to '{1}'.".FormatWith(inputFile, outputFile), ex);
+                throw new FileNotFoundException("Calibre isn't installed properly", "ebook-convert", ex);
             }
-        }
-
-        /// <summary>
-        /// Converts inputFile to all formats (extensions) in the outputFormats list using command ebook-convert from Calibre.
-        /// </summary>
-        public static void Convert(string inputFile, IEnumerable<string> outputFormats)
-        {
-            outputFormats.AsParallel().
-                ForAll(f => Convert(inputFile, f));
         }
     }
 }

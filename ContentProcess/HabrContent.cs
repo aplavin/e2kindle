@@ -77,7 +77,7 @@
                     Concat(commentsChunks); // and comments themselves
             }
 
-            return resultChunks.CombineToHtml();
+            return resultChunks.Combine();
         }
 
         public static bool Test()
