@@ -142,6 +142,11 @@
                         content = fe.Content;
                     }
 
+                    if (Settings.Default.SurroundWithP)
+                    {
+                        content = "<p>" + content + "</p>";
+                    }
+
                     callback(Interlocked.Increment(ref cnt), max);
                     return
                         new

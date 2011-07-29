@@ -82,5 +82,17 @@ namespace e2Kindle.Properties {
                 this["DownloadImages"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SurroundWithP {
+            get {
+                return ((bool)(this["SurroundWithP"]));
+            }
+            set {
+                this["SurroundWithP"] = value;
+            }
+        }
     }
 }
