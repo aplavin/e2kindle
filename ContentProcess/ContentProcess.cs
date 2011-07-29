@@ -2,17 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Drawing;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Xml;
-
-    using HtmlParserMajestic.Wrappers;
-
     using e2Kindle.Properties;
     using GoogleAPI.GoogleReader;
+    using HtmlParserMajestic.Wrappers;
     using NLog;
 
     public static class ContentProcess
@@ -105,14 +102,14 @@
         /// <summary>
         /// Creates FB2 document of all the FeedItems and writes it to the writer.
         /// </summary>
-        public static void CreateFb2(TextWriter writer, IEnumerable<FeedEntry> feedEntries, Action<int, int> callback = null)
+        public static void CreateFb2(TextWriter writer, IEnumerable<FeedEntry> feedEntries, IEnumerable<Feed> feedsFullContent, Action<int, int> callback = null)
         {
             if (writer == null) throw new ArgumentNullException("writer");
             if (feedEntries == null) throw new ArgumentNullException("feedEntries");
 
             if (callback == null) callback = (i, j) => { }; // do null check once
 
-            feedEntries = feedEntries.ToList(); // enumerate it once
+            feedEntries = feedEntries.ToList(); // enumerate once
 
             logger.Info("Processing {0} feeds entries", feedEntries.Count());
 
@@ -127,11 +124,22 @@
                 .AsParallel()
                 .Select(fe =>
                 {
-                    string content = fe.Content;
-                    if (Settings.Default.LoadFullContent && FullContent.Exists(fe.Link))
+                    string content;
+                    if (feedsFullContent.Contains(fe.Feed))
                     {
-                        content = FullContent.Get(fe.Link) ??
-                            fe.Content + "<hr/>[Full article content couldn't be downloaded, although url <u>{0}</u> is supported]".FormatWith(fe.Link);
+                        content = FullContent.Exists(fe.Link) ?
+                            FullContent.Get(fe.Link) :
+                            GenericFullContent.Get(fe.Link);
+
+                        if (content.IsNullOrWhiteSpace())
+                        {
+                            content = "{0}<hr/>[Full article content couldn't be downloaded, URL: <a>{1}</a>]".
+                                FormatWith(fe.Content, fe.Link);
+                        }
+                    }
+                    else
+                    {
+                        content = fe.Content;
                     }
 
                     callback(Interlocked.Increment(ref cnt), max);

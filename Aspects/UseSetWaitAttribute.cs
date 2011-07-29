@@ -1,9 +1,6 @@
 ﻿namespace e2Kindle.Aspects
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using PostSharp.Aspects;
 
     using e2Kindle.UI;

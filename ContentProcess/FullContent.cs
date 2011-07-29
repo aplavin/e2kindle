@@ -11,27 +11,28 @@
         /// </summary>
         private static readonly List<FullContent> Instances = new List<FullContent> 
         {
-            new HabrContent(),
+           new HabrContent(),
         };
 
         /// <summary>
-        /// Checks whether one (and only one) implementation exists which supports this url.
+        /// Checks whether an implementation exists which supports this url.
         /// </summary>
         public static bool Exists(string url)
         {
             if (url == null) return false;
-            return Instances.Count(i => i.IsMyUrl(url)) == 1;
+            return Instances.Exists(i => i.IsMyUrl(url));
         }
 
         /// <summary>
         /// Gets the resulting article for this URL.<para/>
-        /// This function performs all the work: find one (and only one) implementation supporting this URL, process URL, download content and process the content.
+        /// This function performs all the work: find an implementation supporting this URL, process URL, download content and process the content.
+        /// Null is returned when cannot load/process content, but URL is supported.
         /// </summary>
         public static string Get(string url)
         {
             if (url == null) throw new ArgumentNullException("url");
 
-            FullContent instance = Instances.Single(i => i.IsMyUrl(url));
+            FullContent instance = Instances.First(i => i.IsMyUrl(url));
 
             url = instance.ProcessUrl(url);
             try

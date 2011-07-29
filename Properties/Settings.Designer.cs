@@ -74,18 +74,6 @@ namespace e2Kindle.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool LoadFullContent {
-            get {
-                return ((bool)(this["LoadFullContent"]));
-            }
-            set {
-                this["LoadFullContent"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool DownloadImages {
             get {
                 return ((bool)(this["DownloadImages"]));

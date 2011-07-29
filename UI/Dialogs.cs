@@ -2,11 +2,8 @@
 {
     using System;
     using System.ComponentModel;
-    using System.Threading;
     using System.Windows;
-
     using Ookii.Dialogs.Wpf;
-
     using e2Kindle.Aspects;
 
     /// <summary>

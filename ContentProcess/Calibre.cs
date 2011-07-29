@@ -1,11 +1,9 @@
 ﻿namespace e2Kindle.ContentProcess
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
-    using System.Linq;
 
     /// <summary>
     /// Methods to work with Calibre using command line.
@@ -37,8 +35,8 @@
                     if (process.ExitCode != 0)
                     {
                         throw new FileFormatException(
-                            "Format (extension) of input (*{0}) or output (*{1}) file isn't supported by Calibre.".
-                            FormatWith(Path.GetExtension(inputFile), Path.GetExtension(outputFile)));
+                            "Format (extension) of input (*{0}) or output (*{1}) file isn't supported by Calibre."
+                            .FormatWith(Path.GetExtension(inputFile), Path.GetExtension(outputFile)));
                     }
                 }
             }

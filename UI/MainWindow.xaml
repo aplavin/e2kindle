@@ -23,7 +23,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ribbon:Ribbon x:Name="ribbon" Grid.Row="0">
+        <ribbon:Ribbon Grid.Row="0">
             <ribbon:Ribbon.ApplicationMenu>
                 <ribbon:RibbonApplicationMenu>
                     <ribbon:RibbonApplicationMenuItem Header="Open folder"
@@ -42,9 +42,9 @@
                                          ToolTipFooterDescription="To specify your account, go to the Settings tab."/>
                     <ribbon:RibbonButton Click="CreateBookClick" 
                                          LargeImageSource="/Images/32/newspaper_go.png"
-                                         Label="Make book from selected"
-                                         ToolTipTitle="Make book from selected"
-                                         ToolTipDescription="Download all unread entries from selected feeds (with their full content, if possible) and make a book of them."
+                                         Label="Create book"
+                                         ToolTipTitle="Create book"
+                                         ToolTipDescription="Download all unread entries (with their full content, if selected) and make a book of them."
                                          ToolTipFooterDescription="To get list of feeds from your Google Reader account, click Load Feeds.
                                          To specify formats in which you want the book, go to the Settings tab."/>
                     <ribbon:RibbonButton LargeImageSource="/Images/32/email_go.png" 
@@ -53,14 +53,8 @@
                                          ToolTipDescription="NOT IMPLEMENTED"/>
                 </ribbon:RibbonGroup>
 
-                <ribbon:RibbonGroup Header="Options" DataContext="{StaticResource Settings}">
-                    <ribbon:RibbonCheckBox IsChecked="{Binding Path=Default.LoadFullContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                           LargeImageSource="/Images/32/document_layout.png"
-                                           Label="Download full articles"
-                                           ToolTipTitle="Download full articles"
-                                           ToolTipDescription="If checked then e2Kindle downloads page from URL in feed entry, reformats it for better view and adds to the resulting book instead of short feed entry content."
-                                           ToolTipFooterTitle="Note"
-                                           ToolTipFooterDescription="Now this function is supported only for pre-defined web-sites."/>
+                <ribbon:RibbonGroup Header="Options"
+                                    DataContext="{StaticResource Settings}">
                     <ribbon:RibbonCheckBox IsChecked="{Binding Path=Default.MarkAsRead, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                            LargeImageSource="/Images/32/document_prepare.png"
                                            Label="Mark as read"
@@ -119,7 +113,13 @@
             </ribbon:RibbonTab>
         </ribbon:Ribbon>
 
-        <ListView  Grid.Row="1" HorizontalAlignment="Stretch" Margin="12,6,12,6" Name="listView" VerticalAlignment="Stretch" ItemsSource="{Binding Path=Feeds}" SelectionMode="Extended">
+        <ListView Grid.Row="1"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  Margin="12,6,12,6"
+                  x:Name="listView" 
+                  ItemsSource="{Binding Path=Feeds}"
+                  SelectionMode="Extended">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="ToolTip" Value="{Binding Path=Url}" />
@@ -127,13 +127,15 @@
             </ListView.ItemContainerStyle>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn x:Name="Image">
+
+                    <GridViewColumn>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Image HorizontalAlignment="Center" VerticalAlignment="Center" Width="16" Height="16" Source="{Binding IconSource}" Stretch="Uniform"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
+
                     <GridViewColumn Header="Feed" DisplayMemberBinding="{Binding Title}" />
                     <GridViewColumn Header="Unread items" DisplayMemberBinding="{Binding UnreadCount}" />
                 </GridView>

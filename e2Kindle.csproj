@@ -32,8 +32,8 @@
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>4</ApplicationRevision>
-    <ApplicationVersion>0.4.0.%2a</ApplicationVersion>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>0.5.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -130,6 +130,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NLog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL" />
+    <Reference Include="NReadability">
+      <HintPath>..\NReadability\Bin\NReadability.dll</HintPath>
+    </Reference>
     <Reference Include="Ookii.Dialogs.Wpf">
       <HintPath>..\Ookii.Dialogs\Ookii.Dialogs.Wpf.dll</HintPath>
     </Reference>
@@ -141,6 +144,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Microsoft Ribbon for WPF\V4.0\RibbonControlsLibrary.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="SgmlReaderDll">
+      <HintPath>..\NReadability\Bin\SgmlReaderDll.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
@@ -199,6 +205,7 @@
     <Compile Include="ContentProcess\ContentProcess.cs" />
     <Compile Include="ContentProcess\Fb2Utils.cs" />
     <Compile Include="ContentProcess\FullContent.cs" />
+    <Compile Include="ContentProcess\GenericFullContent.cs" />
     <Compile Include="ContentProcess\HabrContent.cs" />
     <Compile Include="ContentProcess\HtmlUtils.cs" />
     <Compile Include="Settings.cs" />

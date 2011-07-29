@@ -7,12 +7,15 @@
     using System.Text.RegularExpressions;
     using System.Threading;
 
+    using NLog;
 
     /// <summary>
     /// Methods working with HTML code or with classe from HtmlParser library.
     /// </summary>
     public static class HtmlUtils
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         /// <summary>
         /// Images which have any string from this array in URL will not be downloaded.
         /// </summary>
@@ -64,7 +67,7 @@
                 catch (Exception ex)
                 {
                     // couldn't recode image - log this and skip
-                    //logger.WarnException("Can't load or convert image from '{0}'.".FormatWith(url), ex);
+                    logger.WarnException("Can't load or convert image from '{0}'.".FormatWith(url), ex);
                     continue;
                 }
 

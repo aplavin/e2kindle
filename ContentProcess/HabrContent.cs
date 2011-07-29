@@ -1,11 +1,8 @@
 ﻿namespace e2Kindle.ContentProcess
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Text.RegularExpressions;
-
     using HtmlParserMajestic.Wrappers;
 
     public class HabrContent : FullContent
@@ -17,17 +14,26 @@
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex CodeRegex = new Regex(@"<code.*>(.*)</code>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        /// <summary>
+        /// Checks wherther specific implementation supports specific url.
+        /// </summary>
         protected override bool IsMyUrl(string url)
         {
             return url != null && UrlRegex.IsMatch(url);
         }
 
+        /// <summary>
+        /// Changes the URL if needed, for example to download article from lightweight mobile site version.
+        /// </summary>
         protected override string ProcessUrl(string url)
         {
             if (url == null) throw new ArgumentNullException("url");
             return UrlRegex.Replace(url, "http://m.habr.ru/post/${Num}/");
         }
 
+        /// <summary>
+        /// Processes downloaded content of the article.
+        /// </summary>
         protected override string ProcessContent(string content)
         {
             if (content == null) throw new ArgumentNullException("content");

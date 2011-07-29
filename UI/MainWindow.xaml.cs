@@ -1,30 +1,22 @@
 ﻿namespace e2Kindle.UI
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.Drawing;
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Threading;
-    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Documents;
     using System.Windows.Input;
-
-    using Microsoft.Windows.Controls.Ribbon;
-
     using e2Kindle.Aspects;
     using e2Kindle.ContentProcess;
     using e2Kindle.Properties;
     using GoogleAPI.GoogleReader;
+    using Microsoft.Windows.Controls.Ribbon;
     using NLog;
-    using Brush = System.Windows.Media.Brush;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -32,7 +24,7 @@
     public partial class MainWindow
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private static MainWindow instance;
+        private static MainWindow _instance;
         private readonly HashSet<string> formats = new HashSet<string>();
 
         #region Feeds collection management
@@ -73,9 +65,9 @@
 
         public MainWindow()
         {
-            this.Feeds = new ObservableCollection<Feed>();
+            Feeds = new ObservableCollection<Feed>();
             InitializeComponent();
-            instance = this;
+            _instance = this;
 
             Dictionary<string, string[]> formatsDic = new Dictionary<string, string[]>
                 {
@@ -104,7 +96,7 @@
 
         public static void SetWait(bool wait)
         {
-            instance.SetWaitInternal(wait);
+            _instance.SetWaitInternal(wait);
         }
 
         [OnGuiThread]
@@ -144,8 +136,6 @@
 
             FeedsAddRange(GoogleReader.GetFeeds().OrderByDescending(gf => gf.UnreadCount));
 
-            FeedsSetSelected(Feeds.Where(f => f.UnreadCount > 0));
-
             logger.Info(
                 "Loaded {0} feeds ({2} unread entries in {1} feeds)",
                 Feeds.Count(),
@@ -173,13 +163,13 @@
 
             logger.Info("----------");
 
-            var feeds = FeedsGetSelected().ToList();
+            var feeds = Feeds.Where(f => f.UnreadCount > 0).ToList();
             logger.Info("Getting feed entries ({0} feeds)", feeds.Count());
 
-            GoogleReader.SetCredentials(Settings.Default.GoogleUser, Settings.Default.GooglePassword);
 
             progress(0, "Downloading feed entries...");
 
+            GoogleReader.SetCredentials(Settings.Default.GoogleUser, Settings.Default.GooglePassword);
             var entries = GoogleReader.GetEntries(feeds)
                 .Flatten()
                 .ToArray();
@@ -189,6 +179,7 @@
                 ContentProcess.CreateFb2(
                         writer,
                         entries,
+                        FeedsGetSelected(),
                         (v, m) => progress(v * 100 / m, "Processing entries: {0}/{1} completed...".FormatWith(v, m)));
             }
 
