@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<configuration>
+  
+  <configSections>
+      <sectionGroup name="userSettings" type="System.Configuration.UserSettingsGroup, System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <section name="e2Kindle.Properties.Settings" type="System.Configuration.ClientSettingsSection, System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" allowExeDefinition="MachineToLocalUser" requirePermission="false"/>
+      </sectionGroup>
+  </configSections>
+  
+  <startup>
+    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0"/>
+  </startup>
+  
+  <userSettings>
+    <e2Kindle.Properties.Settings>
+      <setting name="GoogleUser" serializeAs="String">
+        <value />
+      </setting>
+      <setting name="GooglePassword" serializeAs="String">
+        <value />
+      </setting>
+      <setting name="KindleEmail" serializeAs="String">
+        <value />
+      </setting>
+      <setting name="MarkAsRead" serializeAs="String">
+        <value>True</value>
+      </setting>
+      <setting name="DownloadImages" serializeAs="String">
+        <value>True</value>
+      </setting>
+      <setting name="SurroundWithP" serializeAs="String">
+        <value>False</value>
+      </setting>
+    </e2Kindle.Properties.Settings>
+  </userSettings>
+
+  <system.net>
+    <connectionManagement>
+      <!-- Increase the number of concurrent connections per server to 8. -->
+      <add address="*" maxconnection="16"/>
+    </connectionManagement>
+  </system.net>
+  
+</configuration>
