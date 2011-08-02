@@ -4,6 +4,7 @@
     using System.Reflection;
     using NLog;
     using PostSharp.Aspects;
+    using PostSharp.Aspects.Dependencies;
 
     using e2Kindle.UI;
 
@@ -16,6 +17,7 @@
     }
 
     [Serializable]
+    [ProvideAspectRole(StandardRoles.ExceptionHandling)]
     public sealed class ExceptionHandleAttribute : OnExceptionAspect
     {
         [NonSerialized]

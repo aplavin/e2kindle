@@ -1,63 +1,63 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Symbols xmlns="http://schemas.postsharp.org/2.0/symbols">
   <Class Class="#1=T:e2Kindle.Aspects.ExceptionHandleAttribute">
-    <Instance Declaration="#2=M:e2Kindle.UI.MainWindow::LoadFeeds()" Id="66361c00cd3417da">
+    <Instance Declaration="#2=M:e2Kindle.UI.MainWindow::LoadFeeds()" Id="66361c00d788cd58">
       <Target>
-        <JoinPoint Description="#3=Wrapped by advice(s) OnException" Ordinal="3" />
+        <JoinPoint Description="#3=Wrapped by advice(s) OnException" />
       </Target>
     </Instance>
-    <Instance Declaration="#4=M:e2Kindle.UI.MainWindow::CreateBook(System.Action{System.Int32,System.String})" Id="66361c0081ba6ac5">
+    <Instance Declaration="#4=M:e2Kindle.UI.MainWindow::CreateBook(System.Action{System.Int32,System.String})" Id="66361c0079be0f09">
       <Target>
-        <JoinPoint Description="#3" Ordinal="3" />
+        <JoinPoint Description="#3" />
       </Target>
     </Instance>
   </Class>
   <Class Class="#5=T:e2Kindle.Aspects.UseSetWaitAttribute">
-    <Instance Declaration="#2" Id="66361c003ac5dc12">
+    <Instance Declaration="#2" Id="66361c00c2dc84d0">
       <Target>
-        <JoinPoint Description="#6=Wrapped by advice(s) OnEntry, OnExit" Ordinal="2" />
+        <JoinPoint Description="#6=Wrapped by advice(s) OnEntry, OnExit" Ordinal="4" />
       </Target>
     </Instance>
-    <Instance Declaration="#4" Id="66361c005d62cc49">
+    <Instance Declaration="#4" Id="66361c000aa38845">
       <Target>
-        <JoinPoint Description="#6" Ordinal="2" />
+        <JoinPoint Description="#6" Ordinal="4" />
       </Target>
     </Instance>
   </Class>
   <Class Class="#7=T:e2Kindle.Aspects.OnWorkerThreadAttribute">
-    <Instance Declaration="#8=M:e2Kindle.UI.Dialogs::ShowException(System.Exception, System.String, System.String)" Id="66361c009100d8bd">
+    <Instance Declaration="#8=M:e2Kindle.UI.Dialogs::ShowException(System.Exception, System.String, System.String)" Id="66361c000c378c29">
       <Target>
         <JoinPoint Description="#9=Intercepted by OnInvoke" />
       </Target>
     </Instance>
   </Class>
   <Class Class="#10=T:e2Kindle.Aspects.OnGuiThreadAttribute">
-    <Instance Declaration="#11=M:e2Kindle.UI.MainWindow::FeedsClear()" Id="66361c005ae0c048">
+    <Instance Declaration="#11=M:e2Kindle.UI.MainWindow::FeedsClear()" Id="66361c00f55c7664">
       <Target>
         <JoinPoint Description="#9" />
       </Target>
     </Instance>
-    <Instance Declaration="#12=M:e2Kindle.UI.MainWindow::FeedsAdd(GoogleAPI.GoogleReader.Feed)" Id="66361c0014745765">
+    <Instance Declaration="#12=M:e2Kindle.UI.MainWindow::FeedsAdd(GoogleAPI.GoogleReader.Feed)" Id="66361c0035402007">
       <Target>
         <JoinPoint Description="#9" />
       </Target>
     </Instance>
-    <Instance Declaration="#13=M:e2Kindle.UI.MainWindow::FeedsAddRange(System.Collections.Generic.IEnumerable{GoogleAPI.GoogleReader.Feed})" Id="66361c00399a1066">
+    <Instance Declaration="#13=M:e2Kindle.UI.MainWindow::FeedsAddRange(System.Collections.Generic.IEnumerable{GoogleAPI.GoogleReader.Feed})" Id="66361c00ded1dbe1">
       <Target>
         <JoinPoint Description="#9" />
       </Target>
     </Instance>
-    <Instance Declaration="#14=M:e2Kindle.UI.MainWindow::FeedsGetSelected()" Id="66361c00a27dbea4">
+    <Instance Declaration="#14=M:e2Kindle.UI.MainWindow::FeedsGetSelected()" Id="66361c002c6a9208">
       <Target>
         <JoinPoint Description="#9" />
       </Target>
     </Instance>
-    <Instance Declaration="#15=M:e2Kindle.UI.MainWindow::SetWaitInternal(System.Boolean)" Id="66361c00509c05c6">
+    <Instance Declaration="#15=M:e2Kindle.UI.MainWindow::SetWaitInternal(System.Boolean)" Id="66361c002c1f7926">
       <Target>
         <JoinPoint Description="#9" />
       </Target>
     </Instance>
-    <Instance Declaration="#16=M:e2Kindle.UI.MainWindow::UpdateItemStyle(GoogleAPI.GoogleReader.Feed)" Id="66361c00ba16377a">
+    <Instance Declaration="#16=M:e2Kindle.UI.MainWindow::UpdateItemStyle(GoogleAPI.GoogleReader.Feed)" Id="66361c00a92c9754">
       <Target>
         <JoinPoint Description="#9" />
       </Target>

@@ -2,10 +2,13 @@
 {
     using System;
     using PostSharp.Aspects;
+    using PostSharp.Aspects.Dependencies;
 
     using e2Kindle.UI;
 
     [Serializable]
+    [ProvideAspectRole(StandardRoles.Tracing)]
+    [AspectRoleDependency(AspectDependencyAction.Order, AspectDependencyPosition.After, StandardRoles.ExceptionHandling)]
     public class UseSetWaitAttribute : OnMethodBoundaryAspect
     {
         public UseSetWaitAttribute()

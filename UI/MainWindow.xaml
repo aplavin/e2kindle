@@ -55,20 +55,29 @@
                     <ribbon:RibbonSplitButton x:Name="feedButton"
                                               LargeImageSource="/Images/32/feed_edit.png"
                                               Label="Feed"
+                                              ToolTipTitle="Feed settings"
+                                              ToolTipDescription="Settings related to the selected feed."
+                                              ToolTipFooterDescription="The button itself enables/disables feed loading."
                                               IsCheckable="True"
                                               IsEnabled="False"
                                               Click="FeedSettingsChanged">
-                        <ribbon:RibbonGallery SelectedValue="Green"
-                                              SelectedValuePath="Content"
-                                              MaxColumnCount="1">
+                        <ribbon:RibbonGallery>
                             <ribbon:RibbonGalleryCategory>
-                                <CheckBox x:Name="loadFullContent" Content="Load full content"
+                                <CheckBox x:Name="loadFullContent"
+                                          Content="Load full content"
+                                          ToolTip="Load full content for entries of this feed. Uses NReadability library or site-specific implementation, if exists."
                                           Click="FeedSettingsChanged" />
-                                <CheckBox x:Name="loadImages" Content="Load images"
+                                <CheckBox x:Name="loadImages" 
+                                          Content="Load images"
+                                          ToolTip="Load images in entries of this feed."
                                           Click="FeedSettingsChanged" />
-                                <RadioButton x:Name="unreadEntriesOnly" Content="Unread entries only"
+                                <RadioButton x:Name="unreadEntriesOnly" 
+                                             Content="Unread entries only"
+                                             ToolTip="Load unread items only, according to Google Reader."
                                              Click="FeedSettingsChanged" />
-                                <RadioButton x:Name="allEntries" Content="All entries (max. 1000)"
+                                <RadioButton x:Name="allEntries"
+                                             Content="All entries (max. 1000)"
+                                             ToolTip="Load all entries for this feed, which exist in Google Reader cache. If there are more than 1000 entries, only the first 1000 are loaded."
                                              Click="FeedSettingsChanged" />
                             </ribbon:RibbonGalleryCategory>
                         </ribbon:RibbonGallery>

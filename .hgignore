@@ -4,6 +4,9 @@ bin/Debug
 Setup/Debug
 bin/*/app.publish
 *.orig
+*.mobi
+*.fb2
+*.log
 syntax: regexp
 ReSharper
 StyleCop
