@@ -12,25 +12,15 @@
     public static class Dialogs
     {
         [OnWorkerThread]
-        public static void ShowException(Exception exception, string windowTitle = null, string mainInstruction = null)
+        public static void ShowException(Exception exception)
         {
-            if (windowTitle == null)
-            {
-                windowTitle = exception.GetType().ToString();
-            }
-
-            if (mainInstruction == null)
-            {
-                mainInstruction = "An exception occured: {0}".FormatWith(exception.GetType());
-            }
-
             if (TaskDialog.OSSupportsTaskDialogs)
             {
                 using (var dialog = new TaskDialog())
                 {
-                    dialog.WindowTitle = windowTitle;
-                    dialog.MainInstruction = mainInstruction;
-                    dialog.Content = exception.Message;
+                    dialog.WindowTitle = exception.GetType().ToString();
+                    dialog.MainInstruction = exception.Message;
+                    dialog.Content = "An exception occured: {0}".FormatWith(exception.GetType());
                     dialog.AllowDialogCancellation = true;
                     dialog.MainIcon = TaskDialogIcon.Error;
 
@@ -43,7 +33,11 @@
             }
             else
             {
-                MessageBox.Show(mainInstruction + "\n" + exception.Message, windowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                    "An exception occured: {0}".FormatWith(exception.GetType()) + "\n" + exception.Message,
+                    exception.GetType().ToString(),
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Error);
             }
         }
 
