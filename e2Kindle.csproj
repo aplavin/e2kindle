@@ -196,14 +196,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Aspects\ExceptionDialogAttribute.cs" />
-    <Compile Include="Aspects\ExceptionLogAttribute.cs" />
+    <Compile Include="Aspects\ExceptionHandleAttribute.cs" />
     <Compile Include="Aspects\OnGuiThreadAttribute.cs" />
     <Compile Include="Aspects\OnWorkerThreadAttribute.cs" />
     <Compile Include="Aspects\UseSetWaitAttribute.cs" />
     <Compile Include="ContentProcess\Calibre.cs" />
     <Compile Include="ContentProcess\ContentProcess.cs" />
     <Compile Include="ContentProcess\Fb2Utils.cs" />
+    <Compile Include="ContentProcess\FeedSettings.cs" />
     <Compile Include="ContentProcess\FullContent.cs" />
     <Compile Include="ContentProcess\GenericFullContent.cs" />
     <Compile Include="ContentProcess\HabrContent.cs" />

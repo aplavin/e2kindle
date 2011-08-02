@@ -6,7 +6,7 @@
         Title="e2Kindle" Icon="/Resources/Icon.ico"
         Loaded="WindowLoaded"
         Closing="WindowClosing"
-        Height="Auto" Width="700"
+        Height="Auto" Width="686"
         MinHeight="350" MinWidth="350" 
         mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Properties="clr-namespace:e2Kindle.Properties"
@@ -47,14 +47,33 @@
                                          ToolTipDescription="Download all unread entries (with their full content, if selected) and make a book of them."
                                          ToolTipFooterDescription="To get list of feeds from your Google Reader account, click Load Feeds.
                                          To specify formats in which you want the book, go to the Settings tab."/>
-                    <ribbon:RibbonButton LargeImageSource="/Images/32/email_go.png" 
-                                         Label="E-mail selected"
-                                         ToolTipTitle="E-mail selected"
-                                         ToolTipDescription="NOT IMPLEMENTED"/>
                 </ribbon:RibbonGroup>
 
                 <ribbon:RibbonGroup Header="Options"
                                     DataContext="{StaticResource Settings}">
+
+                    <ribbon:RibbonSplitButton x:Name="feedButton"
+                                              LargeImageSource="/Images/32/feed_edit.png"
+                                              Label="Feed"
+                                              IsCheckable="True"
+                                              IsEnabled="False"
+                                              Click="FeedSettingsChanged">
+                        <ribbon:RibbonGallery SelectedValue="Green"
+                                              SelectedValuePath="Content"
+                                              MaxColumnCount="1">
+                            <ribbon:RibbonGalleryCategory>
+                                <CheckBox x:Name="loadFullContent" Content="Load full content"
+                                          Click="FeedSettingsChanged" />
+                                <CheckBox x:Name="loadImages" Content="Load images"
+                                          Click="FeedSettingsChanged" />
+                                <RadioButton x:Name="unreadEntriesOnly" Content="Unread entries only"
+                                             Click="FeedSettingsChanged" />
+                                <RadioButton x:Name="allEntries" Content="All entries (max. 1000)"
+                                             Click="FeedSettingsChanged" />
+                            </ribbon:RibbonGalleryCategory>
+                        </ribbon:RibbonGallery>
+                    </ribbon:RibbonSplitButton>
+
                     <ribbon:RibbonCheckBox IsChecked="{Binding Path=Default.MarkAsRead, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                            LargeImageSource="/Images/32/document_prepare.png"
                                            Label="Mark as read"
@@ -75,13 +94,6 @@
                                              ToolTipFooterDescription="Conversion is performed using Calibre appicalion, so it must be installed if you need formats other than FB2.">
                         <ribbon:RibbonGallery x:Name="formatsGallery" ColumnsStretchToFill="True" MinColumnCount="3" />
                     </ribbon:RibbonMenuButton>
-                    <ribbon:RibbonCheckBox IsChecked="{Binding Path=Default.DownloadImages, Mode=TwoWay}"
-                                           LargeImageSource="/Images/32/images.png"
-                                           Label="Download images"
-                                           ToolTipTitle="Download images"
-                                           ToolTipDescription="If checked then images will be downloaded when creating book."
-                                           ToolTipFooterTitle="Note"
-                                           ToolTipFooterDescription="This consumes additional traffic and time. For web pages with heavy graphics difference can be huge."/>
                     <ribbon:RibbonCheckBox IsChecked="{Binding Path=Default.SurroundWithP, Mode=TwoWay}"
                                            LargeImageSource="/Images/32/tag.png"
                                            Label="Surround with paragraphs"
@@ -121,7 +133,8 @@
                   Margin="12,6,12,6"
                   x:Name="listView" 
                   ItemsSource="{Binding Path=Feeds}"
-                  SelectionMode="Extended">
+                  SelectionMode="Single"
+                  SelectionChanged="ListViewSelectionChanged">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="ToolTip" Value="{Binding Path=Url}" />

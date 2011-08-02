@@ -5,12 +5,17 @@
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Threading;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Data;
     using System.Windows.Input;
+    using System.Windows.Media;
+
     using e2Kindle.Aspects;
     using e2Kindle.ContentProcess;
     using e2Kindle.Properties;
@@ -31,6 +36,8 @@
         // For WPF binding.
         public ObservableCollection<Feed> Feeds { get; private set; }
 
+        public Dictionary<Feed, FeedSettings> FeedSettings { get; private set; }
+
         [OnGuiThread]
         private void FeedsClear()
         {
@@ -50,22 +57,17 @@
         }
 
         [OnGuiThread]
-        private void FeedsSetSelected(IEnumerable<Feed> feeds)
+        private Feed FeedsGetSelected()
         {
-            listView.SelectedItems.Clear();
-            listView.SelectedItems.AddRange(feeds);
-        }
-
-        [OnGuiThread]
-        private IEnumerable<Feed> FeedsGetSelected()
-        {
-            return listView.SelectedItems.Cast<Feed>();
+            return listView.SelectedItem as Feed;
         }
         #endregion
 
         public MainWindow()
         {
             Feeds = new ObservableCollection<Feed>();
+            Feeds.CollectionChanged += (s, e) => FeedSettings = Feeds.ToDictionary(f => f, f => new FeedSettings(f));
+
             InitializeComponent();
             _instance = this;
 
@@ -121,8 +123,7 @@
             Dialogs.ShowProgress("Loading feeds...", LoadFeeds, marquee: true, showCancel: false);
         }
 
-        [ExceptionLog]
-        [ExceptionDialog]
+        [ExceptionHandle(ExceptionHandling.Dialog | ExceptionHandling.Log)]
         [UseSetWait]
         private void LoadFeeds()
         {
@@ -135,6 +136,9 @@
             GoogleReader.SetCredentials(Settings.Default.GoogleUser, Settings.Default.GooglePassword);
 
             FeedsAddRange(GoogleReader.GetFeeds().OrderByDescending(gf => gf.UnreadCount));
+
+            Feeds.ForEach(f => FeedSettings[f].Enabled = f.UnreadCount > 0);
+            Feeds.ForEach(UpdateItemStyle);
 
             logger.Info(
                 "Loaded {0} feeds ({2} unread entries in {1} feeds)",
@@ -150,37 +154,22 @@
             Dialogs.ShowProgress("Creating book...", (pd, a) => CreateBook((i, s) => pd.ReportProgress(i, null, s)), showCancel: false);
         }
 
-        [ExceptionLog]
-        [ExceptionDialog]
+        [ExceptionHandle(ExceptionHandling.Dialog | ExceptionHandling.Log)]
         [UseSetWait]
         private void CreateBook(Action<int, string> progress)
         {
-            if (FeedsGetSelected().Empty())
-            {
-                logger.Warn("No feeds selected.");
-                return;
-            }
+            if (Feeds.Empty()) return;
 
             logger.Info("----------");
 
-            var feeds = Feeds.Where(f => f.UnreadCount > 0).ToList();
-            logger.Info("Getting feed entries ({0} feeds)", feeds.Count());
-
-
-            progress(0, "Downloading feed entries...");
-
             GoogleReader.SetCredentials(Settings.Default.GoogleUser, Settings.Default.GooglePassword);
-            var entries = GoogleReader.GetEntries(feeds)
-                .Flatten()
-                .ToArray();
-
             using (var writer = new StreamWriter("out.fb2"))
             {
                 ContentProcess.CreateFb2(
                         writer,
-                        entries,
-                        FeedsGetSelected(),
-                        (v, m) => progress(v * 100 / m, "Processing entries: {0}/{1} completed...".FormatWith(v, m)));
+                        Feeds,
+                        FeedSettings,
+                        progress);
             }
 
             logger.Info("Feeds are downloaded and saved as FB2");
@@ -210,21 +199,58 @@
                 logger.Info("Converted to all specified formats");
             }
 
-            if (Settings.Default.MarkAsRead)
-            {
-                logger.Info("Marking downloaded and saved entries as read at Google Reader");
-                progress(100, "Marking downloaded and saved entries as read at Google Reader");
-
-                GoogleReader.MarkAsRead(entries);
-                logger.Info("Marked all entries as read");
-            }
-
             logger.Info("----------");
         }
 
         private void OpenFolderClick(object sender, RoutedEventArgs e)
         {
             Process.Start(".");
+        }
+
+        private void ListViewSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selected = FeedsGetSelected();
+
+            if (selected == null)
+            {
+                feedButton.IsEnabled = false;
+            }
+            else
+            {
+                feedButton.IsEnabled = true;
+
+                feedButton.IsChecked = FeedSettings[selected].Enabled;
+                loadFullContent.IsChecked = FeedSettings[selected].FullContent;
+                allEntries.IsChecked = FeedSettings[selected].LoadAllEntries;
+                unreadEntriesOnly.IsChecked = !allEntries.IsChecked;
+                loadImages.IsChecked = FeedSettings[selected].LoadImages;
+            }
+        }
+
+        private void FeedSettingsChanged(object sender, object e)
+        {
+            var selected = FeedsGetSelected();
+
+            if (selected != null)
+            {
+                FeedSettings[selected].Enabled = feedButton.IsChecked;
+                FeedSettings[selected].FullContent = loadFullContent.IsChecked.To<bool>();
+                FeedSettings[selected].LoadAllEntries = allEntries.IsChecked.To<bool>();
+                FeedSettings[selected].LoadImages = loadImages.IsChecked.To<bool>();
+
+                UpdateItemStyle(selected);
+            }
+        }
+
+        [OnGuiThread]
+        private void UpdateItemStyle(Feed item)
+        {
+            var lvItem = (ListViewItem)listView.ItemContainerGenerator.ContainerFromItem(item);
+            if (lvItem == null) return;
+
+            var settings = FeedSettings[item];
+
+            lvItem.Foreground = settings.Enabled ? listView.Foreground : Brushes.Gray;
         }
     }
 }

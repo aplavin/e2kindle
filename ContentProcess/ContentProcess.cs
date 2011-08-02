@@ -47,14 +47,15 @@
         /// Convert HTML code to FB2, including images (they are downloaded, grayscaled and recompressed).
         /// </summary>
         /// <param name="content">Before: HTML code to be converted. After: converted FB2 code.</param>
+        /// <param name="withImages"></param>
         /// <param name="binaries">List of binary sections in the FB2 document. This function appends to it.</param>
-        public static string HtmlToFb2(string content, List<KeyValuePair<string, byte[]>> binaries)
+        private static string HtmlToFb2(string content, bool withImages, List<KeyValuePair<string, byte[]>> binaries)
         {
             if (content == null) throw new ArgumentNullException("content");
             if (binaries == null) throw new ArgumentNullException("binaries");
 
             // process images in html
-            var images = Settings.Default.DownloadImages ?
+            var images = withImages ?
                 HtmlUtils.ProcessHtmlImages(ref content) :
                 Enumerable.Empty<KeyValuePair<string, byte[]>>();
 
@@ -102,66 +103,74 @@
         /// <summary>
         /// Creates FB2 document of all the FeedItems and writes it to the writer.
         /// </summary>
-        public static void CreateFb2(TextWriter writer, IEnumerable<FeedEntry> feedEntries, IEnumerable<Feed> feedsFullContent, Action<int, int> callback = null)
+        public static void CreateFb2(
+            TextWriter writer,
+            IEnumerable<Feed> feeds,
+            Dictionary<Feed, FeedSettings> feedSettings,
+            Action<int, string> callback = null)
         {
             if (writer == null) throw new ArgumentNullException("writer");
-            if (feedEntries == null) throw new ArgumentNullException("feedEntries");
+            if (feeds == null) throw new ArgumentNullException("feeds");
+            feeds = feeds.ToList(); // enumerate once
+            if (feedSettings == null) throw new ArgumentNullException("feedSettings");
+            if (!feeds.All(feedSettings.ContainsKey)) throw new ArgumentException("Feeds settings doesn't contain settings for all feeds.");
+            if (callback == null) callback = (i, s) => { }; // do null check once
 
-            if (callback == null) callback = (i, j) => { }; // do null check once
+            feeds = feeds.Where(f => feedSettings[f].Enabled);
 
-            feedEntries = feedEntries.ToList(); // enumerate once
-
-            logger.Info("Processing {0} feeds entries", feedEntries.Count());
-
-            int cnt = 0;
-            int max = feedEntries.Count();
-            callback(cnt, max);
+            logger.Info("Loading feeds entries");
+            callback(0, "Loading feeds entries...");
+            var feedEntries = feeds.AsParallel().SelectMany(f => GoogleReader.GetEntries(f, feedSettings[f].LoadAllEntries ? 1000 : 0)).ToList();
+            logger.Info("Loaded feeds entries");
 
             var binaries = new List<KeyValuePair<string, byte[]>>();
 
+            int cnt = 0;
+            int max = feedEntries.Count();
+
             var entries = feedEntries
-                .OrderBy(fe => FullContent.Exists(fe.Link))
                 .AsParallel()
                 .Select(fe =>
-                {
-                    string content;
-                    if (feedsFullContent.Contains(fe.Feed))
                     {
-                        content = FullContent.Exists(fe.Link) ?
-                            FullContent.Get(fe.Link) :
-                            GenericFullContent.Get(fe.Link);
+                        callback(cnt * 100 / max, "Processing entry {0}/{1}...".FormatWith(Interlocked.Increment(ref cnt), max));
 
-                        if (content.IsNullOrWhiteSpace())
+                        var feedSetting = feedSettings[fe.Feed];
+
+                        string content;
+                        if (feedSetting.FullContent)
                         {
-                            content = "{0}<hr/>[Full article content couldn't be downloaded, URL: <a>{1}</a>]".
-                                FormatWith(fe.Content, fe.Link);
-                        }
-                    }
-                    else
-                    {
-                        content = fe.Content;
-                    }
+                            content = FullContent.Exists(fe.Link)
+                                ? FullContent.Get(fe.Link)
+                                : GenericFullContent.Get(fe.Link);
 
-                    if (Settings.Default.SurroundWithP)
-                    {
-                        content = "<p>" + content + "</p>";
-                    }
-
-                    callback(Interlocked.Increment(ref cnt), max);
-                    return
-                        new
+                            if (content.IsNullOrWhiteSpace())
                             {
-                                FeedTitle = fe.Feed.Title,
-                                Title = fe.Title,
-                                Published = fe.Published,
-                                Content = HtmlToFb2(content, binaries)
-                            };
-                })
+                                content = "{0}<hr/>[Full article content couldn't be downloaded, URL: <a>{1}</a>]"
+                                    .FormatWith(fe.Content, fe.Link);
+                            }
+                        }
+                        else
+                        {
+                            content = fe.Content;
+                        }
+
+                        if (Settings.Default.SurroundWithP)
+                        {
+                            content = "<p>" + content + "</p>";
+                        }
+
+                        return new
+                        {
+                            FeedTitle = fe.Feed.Title,
+                            Title = fe.Title,
+                            Published = fe.Published,
+                            Content = HtmlToFb2(content, feedSetting.LoadImages, binaries)
+                        };
+                    })
                 .GroupBy(e => e.FeedTitle)
-                .OrderBy(gr => gr.Key)
                 .ToList();
 
-            callback(max, max);
+            callback(100, "Creating FB2 file...");
 
             logger.Info("Creating XML structure of the FB2 (intermediate format)");
             using (XmlWriter xw = XmlWriter.Create(writer, new XmlWriterSettings { Indent = true }))
@@ -238,6 +247,16 @@
                 }
 
                 xw.WriteEndDocument();
+            }
+
+
+            if (Settings.Default.MarkAsRead)
+            {
+                logger.Info("Marking downloaded and saved entries as read at Google Reader");
+                callback(100, "Marking downloaded and saved entries as read...");
+
+                GoogleReader.MarkAsRead(feedEntries);
+                logger.Info("Marked all entries as read");
             }
         }
     }
