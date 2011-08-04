@@ -208,6 +208,7 @@
     <Compile Include="ContentProcess\GenericFullContent.cs" />
     <Compile Include="ContentProcess\HabrContent.cs" />
     <Compile Include="ContentProcess\HtmlUtils.cs" />
+    <Compile Include="ContentProcess\Kindle.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="UI\Dialogs.cs" />
     <Compile Include="UI\RibbonPasswordTextBox.xaml.cs">

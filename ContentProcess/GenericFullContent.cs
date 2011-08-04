@@ -8,12 +8,13 @@
     /// </summary>
     public static class GenericFullContent
     {
+        // TODO: fix it for multithreading
         private static readonly NReadabilityWebTranscoder Transcoder = new NReadabilityWebTranscoder();
 
         public static string Get(string url)
         {
             bool isExtracted;
-            string result = Transcoder.Transcode(url, new DomSerializationParams { PrettyPrint = true }, out isExtracted);
+            string result = new NReadabilityWebTranscoder().Transcode(url, new DomSerializationParams { PrettyPrint = true }, out isExtracted);
             if (!isExtracted) return null;
 
             return HtmlParser.Parse(result)

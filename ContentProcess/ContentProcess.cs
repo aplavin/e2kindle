@@ -154,11 +154,6 @@
                             content = fe.Content;
                         }
 
-                        if (Settings.Default.SurroundWithP)
-                        {
-                            content = "<p>" + content + "</p>";
-                        }
-
                         return new
                         {
                             FeedTitle = fe.Feed.Title,
@@ -210,17 +205,27 @@
 
                 xw.WriteStartElement("body");
 
+                string formatString = Settings.Default.SurroundWithP ? "<p>{0}</p>" : "{0}";
+
                 foreach (var group in entries)
                 {
                     xw.WriteStartElement("section");
-                    xw.WriteElementString("title", group.Key);
+
+                    xw.WriteStartElement("title");
+                    xw.WriteRaw(formatString.FormatWith(group.Key));
+                    xw.WriteEndElement();
 
                     foreach (var feedEntry in group.OrderByDescending(fi => fi.Published))
                     {
+
                         xw.WriteStartElement("section");
-                        xw.WriteElementString("title", feedEntry.Title);
+
+                        xw.WriteStartElement("title");
+                        xw.WriteRaw(formatString.FormatWith(feedEntry.Title));
+                        xw.WriteEndElement();
+
                         xw.WriteElementString("subtitle", feedEntry.Published.ToString("dd MMMM yyyy (dddd) - HH:mm:ss"));
-                        xw.WriteRaw(feedEntry.Content);
+                        xw.WriteRaw(formatString.FormatWith(feedEntry.Content));
                         xw.WriteEndElement();
                     }
 

@@ -189,6 +189,11 @@
                     {
                         Calibre.Convert("out.fb2", tFormat);
                         logger.Info("Successfully converted to {0}", format);
+
+                        if (format.ToLower() == "mobi" && Kindle.IsConnected)
+                        {
+                            Kindle.SendDocument("out.mobi");
+                        }
                     }
                     catch (Exception ex)
                     {
