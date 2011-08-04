@@ -155,6 +155,11 @@
             Used in FindNextPageLink
             </summary>
         </member>
+        <member name="T:NReadability.UrlFetcher">
+            <summary>
+            Fetches web content.
+            </summary>
+        </member>
         <member name="T:NReadability.ReadingStyle">
             <summary>
             Determines how the extracted article will be styled.
@@ -240,30 +245,17 @@
             Extra-large font.
             </summary>
         </member>
-        <member name="T:NReadability.UrlFetcher">
+        <member name="T:NReadability.SgmlDomBuilder">
             <summary>
-            Fetches web content.
+            A class for constructing a DOM from HTML markup.
             </summary>
         </member>
-        <member name="T:NReadability.SgmlDomSerializer">
+        <member name="M:NReadability.SgmlDomBuilder.BuildDocument(System.String)">
             <summary>
-            A class for serializing a DOM to string.
+            Constructs a DOM (System.Xml.Linq.XDocument) from HTML markup.
             </summary>
-        </member>
-        <member name="M:NReadability.SgmlDomSerializer.SerializeDocument(System.Xml.Linq.XDocument,NReadability.DomSerializationParams)">
-            <summary>
-            Serializes given DOM (System.Xml.Linq.XDocument object) to a string.
-            </summary>
-            <param name="document">System.Xml.Linq.XDocument instance containing the DOM to be serialized.</param>
-            <param name="domSerializationParams">Contains parameters that modify the behaviour of the output serialization.</param>
-            <returns>Serialized representation of the DOM.</returns>
-        </member>
-        <member name="M:NReadability.SgmlDomSerializer.SerializeDocument(System.Xml.Linq.XDocument)">
-            <summary>
-            Serializes given DOM (System.Xml.Linq.XDocument object) to a string.
-            </summary>
-            <param name="document">System.Xml.Linq.XDocument instance containing the DOM to be serialized.</param>
-            <returns>Serialized representation of the DOM.</returns>
+            <param name="htmlContent">HTML markup from which the DOM is to be constructed.</param>
+            <returns>System.Linq.Xml.XDocument instance which is a DOM of the provided HTML markup.</returns>
         </member>
         <member name="M:NReadability.DomSerializationParams.CreateDefault">
             <summary>
@@ -293,6 +285,16 @@
         <member name="P:NReadability.DomSerializationParams.DontIncludeGeneratorMetaElement">
             <summary>
             Determines whether a meta tag with a generator specification will be added/replaced in the output.
+            </summary>
+        </member>
+        <member name="P:NReadability.AttributeTransformationResult.TransformedValue">
+            <summary>
+            Result of the transformation.
+            </summary>
+        </member>
+        <member name="P:NReadability.AttributeTransformationResult.OriginalValueAttributeName">
+            <summary>
+            Name of the attribute that will be used to store the original value. Can be null.
             </summary>
         </member>
         <member name="T:NReadability.InternalErrorException">
@@ -326,26 +328,41 @@
             <param name="info">The System.Runtime.Serialization.SerializationInfo that holds the serialized object data about the exception being thrown.</param>
             <param name="context">The System.Runtime.Serialization.StreamingContext that contains contextual information about the source or destination.</param>
         </member>
-        <member name="T:NReadability.SgmlDomBuilder">
+        <member name="T:NReadability.SgmlDomSerializer">
             <summary>
-            A class for constructing a DOM from HTML markup.
+            A class for serializing a DOM to string.
             </summary>
         </member>
-        <member name="M:NReadability.SgmlDomBuilder.BuildDocument(System.String)">
+        <member name="M:NReadability.SgmlDomSerializer.SerializeDocument(System.Xml.Linq.XDocument,NReadability.DomSerializationParams)">
             <summary>
-            Constructs a DOM (System.Xml.Linq.XDocument) from HTML markup.
+            Serializes given DOM (System.Xml.Linq.XDocument object) to a string.
             </summary>
-            <param name="htmlContent">HTML markup from which the DOM is to be constructed.</param>
-            <returns>System.Linq.Xml.XDocument instance which is a DOM of the provided HTML markup.</returns>
+            <param name="document">System.Xml.Linq.XDocument instance containing the DOM to be serialized.</param>
+            <param name="domSerializationParams">Contains parameters that modify the behaviour of the output serialization.</param>
+            <returns>Serialized representation of the DOM.</returns>
         </member>
-        <member name="P:NReadability.AttributeTransformationResult.TransformedValue">
+        <member name="M:NReadability.SgmlDomSerializer.SerializeDocument(System.Xml.Linq.XDocument)">
             <summary>
-            Result of the transformation.
+            Serializes given DOM (System.Xml.Linq.XDocument object) to a string.
+            </summary>
+            <param name="document">System.Xml.Linq.XDocument instance containing the DOM to be serialized.</param>
+            <returns>Serialized representation of the DOM.</returns>
+        </member>
+        <member name="M:NReadability.UtilityExtensions.GetReader(System.IO.Stream,System.Text.Encoding)">
+            <summary>
+            Gets StreamReader for this <paramref name="stream"/>.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">When stream doesn't support reading.</exception>
+        </member>
+        <member name="M:NReadability.UtilityExtensions.ToSeekable(System.IO.Stream)">
+            <summary>
+            Returns seekable MemoryStream which contains the same data as this <paramref name="stream"/> (from current position).
+            This <paramref name="stream"/> position after this call will be at the end.
             </summary>
         </member>
-        <member name="P:NReadability.AttributeTransformationResult.OriginalValueAttributeName">
+        <member name="M:NReadability.UtilityExtensions.GetBetween(System.String,System.String,System.String)">
             <summary>
-            Name of the attribute that will be used to store the original value. Can be null.
+            Gets the string between the first occurrence of <paramref name="left"/> and the first occurrence of <paramref name="right"/> after left's one.
             </summary>
         </member>
         <member name="T:NReadability.NReadabilityWebTranscoder">
