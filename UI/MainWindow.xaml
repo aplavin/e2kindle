@@ -107,7 +107,7 @@
                                            LargeImageSource="/Images/32/tag.png"
                                            Label="Surround with paragraphs"
                                            ToolTipTitle="Surround with paragraphs"
-                                           ToolTipDescription="If checked then all entries in the resulting FB2 book will be surrounded with &lt;p&gt;...&lt;/p&gt;. You may need this when using converter such as fb2pdf, which doesn't work properly otherwise."
+                                           ToolTipDescription="If checked then all entries content and title in the resulting FB2 book will be surrounded with &lt;p&gt;...&lt;/p&gt;. You may need this when using converter such as fb2pdf, which doesn't work properly otherwise."
                                            ToolTipFooterTitle="Note"
                                            ToolTipFooterDescription="If you don't experience any conversion or displaying problems with this turned off, don't switch on."/>
                 </ribbon:RibbonGroup>

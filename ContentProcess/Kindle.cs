@@ -39,7 +39,7 @@
             if (!IsConnected) throw new InvalidOperationException("Kindle isn't connected.");
             if (!File.Exists(fileName)) throw new FileNotFoundException("Specified file not found.", fileName);
 
-            File.Copy(fileName, Path.Combine(DriveLetter, "documents"), true);
+            File.Copy(fileName, Path.Combine(DriveLetter, "documents", Path.GetFileName(fileName)), true);
         }
     }
 }

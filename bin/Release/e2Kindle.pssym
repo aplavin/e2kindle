@@ -1,63 +1,63 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Symbols xmlns="http://schemas.postsharp.org/2.0/symbols">
   <Class Class="#1=T:e2Kindle.Aspects.OnGuiThreadAttribute">
-    <Instance Declaration="#2=M:e2Kindle.UI.MainWindow::FeedsClear()" Id="66361c00f9b26a13">
+    <Instance Declaration="#2=M:e2Kindle.UI.MainWindow::FeedsClear()" Id="66361c0071f7374a">
       <Target>
         <JoinPoint Description="#3=Intercepted by OnInvoke" />
       </Target>
     </Instance>
-    <Instance Declaration="#4=M:e2Kindle.UI.MainWindow::FeedsAdd(GoogleAPI.GoogleReader.Feed)" Id="66361c001849d8ea">
+    <Instance Declaration="#4=M:e2Kindle.UI.MainWindow::FeedsAdd(GoogleAPI.GoogleReader.Feed)" Id="66361c00e24a6866">
       <Target>
         <JoinPoint Description="#3" />
       </Target>
     </Instance>
-    <Instance Declaration="#5=M:e2Kindle.UI.MainWindow::FeedsAddRange(System.Collections.Generic.IEnumerable{GoogleAPI.GoogleReader.Feed})" Id="66361c006a1f131f">
+    <Instance Declaration="#5=M:e2Kindle.UI.MainWindow::FeedsAddRange(System.Collections.Generic.IEnumerable{GoogleAPI.GoogleReader.Feed})" Id="66361c0013565678">
       <Target>
         <JoinPoint Description="#3" />
       </Target>
     </Instance>
-    <Instance Declaration="#6=M:e2Kindle.UI.MainWindow::FeedsGetSelected()" Id="66361c00552d239f">
+    <Instance Declaration="#6=M:e2Kindle.UI.MainWindow::FeedsGetSelected()" Id="66361c0034489ec6">
       <Target>
         <JoinPoint Description="#3" />
       </Target>
     </Instance>
-    <Instance Declaration="#7=M:e2Kindle.UI.MainWindow::SetWaitInternal(System.Boolean)" Id="66361c00ee5efc03">
+    <Instance Declaration="#7=M:e2Kindle.UI.MainWindow::SetWaitInternal(System.Boolean)" Id="66361c00fb940551">
       <Target>
         <JoinPoint Description="#3" />
       </Target>
     </Instance>
-    <Instance Declaration="#8=M:e2Kindle.UI.MainWindow::UpdateItemStyle(GoogleAPI.GoogleReader.Feed)" Id="66361c00d40c2e84">
+    <Instance Declaration="#8=M:e2Kindle.UI.MainWindow::UpdateItemStyle(GoogleAPI.GoogleReader.Feed)" Id="66361c003232af8b">
       <Target>
         <JoinPoint Description="#3" />
       </Target>
     </Instance>
   </Class>
   <Class Class="#9=T:e2Kindle.Aspects.OnWorkerThreadAttribute">
-    <Instance Declaration="#10=M:e2Kindle.UI.Dialogs::ShowException(System.Exception)" Id="66361c00079ab6e9">
+    <Instance Declaration="#10=M:e2Kindle.UI.Dialogs::ShowException(System.Exception)" Id="66361c00699e585a">
       <Target>
         <JoinPoint Description="#3" />
       </Target>
     </Instance>
   </Class>
   <Class Class="#11=T:e2Kindle.Aspects.ExceptionHandleAttribute">
-    <Instance Declaration="#12=M:e2Kindle.UI.MainWindow::LoadFeeds()" Id="66361c004e284500">
+    <Instance Declaration="#12=M:e2Kindle.UI.MainWindow::LoadFeeds()" Id="66361c000010137c">
       <Target>
         <JoinPoint Description="#13=Wrapped by advice(s) OnException" />
       </Target>
     </Instance>
-    <Instance Declaration="#14=M:e2Kindle.UI.MainWindow::CreateBook(System.Action{System.Int32,System.String})" Id="66361c006f4fd701">
+    <Instance Declaration="#14=M:e2Kindle.UI.MainWindow::CreateBook(System.Action{System.Int32,System.String})" Id="66361c006afab526">
       <Target>
         <JoinPoint Description="#13" />
       </Target>
     </Instance>
   </Class>
   <Class Class="#15=T:e2Kindle.Aspects.UseSetWaitAttribute">
-    <Instance Declaration="#12" Id="66361c005d18797c">
+    <Instance Declaration="#12" Id="66361c009f270908">
       <Target>
         <JoinPoint Description="#16=Wrapped by advice(s) OnEntry, OnExit" Ordinal="4" />
       </Target>
     </Instance>
-    <Instance Declaration="#14" Id="66361c00bbcd38b7">
+    <Instance Declaration="#14" Id="66361c00b84c1cd3">
       <Target>
         <JoinPoint Description="#16" Ordinal="4" />
       </Target>
